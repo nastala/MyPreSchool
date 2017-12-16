@@ -1,7 +1,9 @@
 package com.example.mypreschool.Fragments;
 
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,19 +22,23 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.mypreschool.Adapters.StudentAdapter;
 import com.example.mypreschool.Classes.Parent;
 import com.example.mypreschool.Classes.Student;
 import com.example.mypreschool.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,10 +60,10 @@ public class AdminStudentFragment extends Fragment {
     private TextView tvAdminAddStudent;
     private Student student;
     private CircleImageView civStudent;
-    private Uri uri;
     private Spinner spnAdminParent;
     private LinearLayout llAdminStudents;
-    private Parent sParent;
+    private Parent mParent;
+    private Dialog dialog;
 
     private ArrayList<Parent> parents;
     private ArrayList<Student> students;
@@ -90,8 +96,8 @@ public class AdminStudentFragment extends Fragment {
                 if(!(parents.size() > 0))
                     return;
 
-                sParent = parents.get(position);
-                listStudents(sParent.getUid());
+                mParent = parents.get(position);
+                listStudents(mParent.getUid());
             }
 
             @Override
@@ -123,8 +129,10 @@ public class AdminStudentFragment extends Fragment {
                     parents2.add(name);
                 }
 
-                if(parents.size() > 0)
-                    listStudents(parents.get(0).getUid());
+                if(parents.size() > 0) {
+                    mParent = parents.get(0);
+                    listStudents(mParent.getUid());
+                }
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, parents2);
                 spnAdminParent.setAdapter(arrayAdapter);
                 pbAdmin.setVisibility(View.GONE);
@@ -163,7 +171,12 @@ public class AdminStudentFragment extends Fragment {
                     Log.d(TAG, student.getName());
                     students.add(student);
                 }
-                StudentAdapter adapter = new StudentAdapter(getActivity(), students);
+                StudentAdapter adapter = new StudentAdapter(getActivity(), students, new StudentAdapter.OnItemClickListener() {
+                    @Override
+                    public void onYorumSilClick(Student student) {
+                        showRemoveStudentAlertDialog(student);
+                    }
+                });
                 lvStudents.setAdapter(adapter);
                 pbAdmin.setVisibility(View.GONE);
             }
@@ -189,6 +202,44 @@ public class AdminStudentFragment extends Fragment {
                 showEditStudentDialog(student);
             }
         });
+
+    }
+
+    private void showRemoveStudentAlertDialog(final Student student){
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle("UYARI");
+        alertDialog.setMessage("Öğrenciyi silmek istediğinizden emin misiniz?");
+        alertDialog.setCancelable(false);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "EVET", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                pbAdmin.setVisibility(View.VISIBLE);
+                db.collection("Parents").document(mParent.getUid()).collection("Students").document(student.getStudentID()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getActivity(), "Student has been removed", Toast.LENGTH_SHORT).show();
+                        pbAdmin.setVisibility(View.GONE);
+                        alertDialog.dismiss();
+                        listStudents(mParent.getUid());
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "STUDENT REMOVE HATA: " + e.getMessage());
+                        pbAdmin.setVisibility(View.GONE);
+                        alertDialog.dismiss();
+                    }
+                });
+            }
+        });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "HAYIR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
     }
 
     private void showAddStudentDialog(final String parentID){
@@ -250,6 +301,9 @@ public class AdminStudentFragment extends Fragment {
                     .load(student.getSgurl())
                     .into(civStudent);
         }
+        else {
+            civStudent.setImageResource(R.drawable.defaultprofil);
+        }
 
         etStudentName.setText(student.getName());
         btnAddStudent.setText("UPDATE STUDENT");
@@ -271,7 +325,6 @@ public class AdminStudentFragment extends Fragment {
                 Map<String, Object> studentDetail = new HashMap<>();
                 String studentName = etStudentName.getText().toString();
                 studentDetail.put("name", studentName);
-                studentDetail.put("sgurl", "default");
 
                 db.collection("Parents").document(student.getParentID()).collection("Students").document(student.getStudentID()).update(studentDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -296,15 +349,59 @@ public class AdminStudentFragment extends Fragment {
         dialog.show();
     }
 
+    private void yukleniyorDialogGoster(){
+        dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.layout_progress_bar);
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
+    private void yukleniyorDialogKapat(){
+        dialog.dismiss();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == IMAGE_REQUEST){
             if(data.getData() == null)
                 return;
 
+            yukleniyorDialogGoster();
             Uri uri = data.getData();
-        }
+            Glide.with(civStudent.getContext())
+                    .load(uri)
+                    .into(civStudent);
 
+            StorageReference filePath = mStorage.child(student.getStudentID());
+            filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadUri = taskSnapshot.getDownloadUrl();
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("sgurl", downloadUri.toString());
+
+                    db.collection("Parents").document(mParent.getUid()).collection("Students").document(student.getStudentID()).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "STUDENT SGURL GUNCELLENDI");
+                            yukleniyorDialogKapat();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, "STUDENT SGURL GUNCELLENEMEDI HATA: " + e.getMessage());
+                            yukleniyorDialogKapat();
+                        }
+                    });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d(TAG, "STUDENT FIREBASE STORAGE HATA: " + e.getMessage());
+                    yukleniyorDialogKapat();
+                }
+            });
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

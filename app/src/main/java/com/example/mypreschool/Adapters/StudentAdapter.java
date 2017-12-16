@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -23,10 +24,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class StudentAdapter extends BaseAdapter {
     private ArrayList<Student> students;
     private LayoutInflater mInflater;
+    private OnItemClickListener onItemClickListener;
 
-    public StudentAdapter(Activity activity, ArrayList<Student> students) {
+    public interface OnItemClickListener{
+        void onYorumSilClick(Student student);
+    }
+
+    public StudentAdapter(Activity activity, ArrayList<Student> students, OnItemClickListener onItemClickListener) {
         mInflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.students = students;
+        this.onItemClickListener = onItemClickListener;
     }
 
     @Override
@@ -50,13 +57,26 @@ public class StudentAdapter extends BaseAdapter {
 
         CircleImageView civStudentImage = view.findViewById(R.id.civStudentImage);
         TextView tvStudentName = view.findViewById(R.id.tvStudentName);
+        ImageView ivStudentDelete = view.findViewById(R.id.ivStudentDelete);
 
-        Student student = students.get(position);
-        if(!(student.getSgurl().isEmpty())){
+        final Student student = students.get(position);
+
+        ivStudentDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onItemClickListener != null){
+                    onItemClickListener.onYorumSilClick(student);
+                }
+            }
+        });
+
+        if(!(student.getSgurl().equals("default"))){
             Glide.with(civStudentImage.getContext())
                     .load(student.getSgurl())
                     .into(civStudentImage);
         }
+        else
+            civStudentImage.setImageResource(R.drawable.defaultprofil);
 
         tvStudentName.setText(student.getName());
 

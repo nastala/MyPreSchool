@@ -46,8 +46,23 @@ public class AdminMainFragment extends Fragment {
                 goStudentAdminFragment();
             }
         });
+        btnSchoolAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goSchoolAdminFragmet();
+            }
+        });
 
         return view;
+    }
+
+    private void goSchoolAdminFragmet(){
+        Fragment hedef = new AdminStudentFragment();
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.flMainActivity, hedef);
+        ft.addToBackStack(null);
+        ft.commit();
     }
 
     private void goParentAdminFragment(){
