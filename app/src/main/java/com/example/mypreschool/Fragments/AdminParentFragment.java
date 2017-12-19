@@ -21,9 +21,14 @@ import com.example.mypreschool.Classes.Student;
 import com.example.mypreschool.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +37,7 @@ public class AdminParentFragment extends Fragment {
     private static final String TAG = "ADMINPARENT";
 
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
     private ListView lvParents;
     private ProgressBar pbAdmin, pbAddParent;
     private ArrayList<Parent> parents;
@@ -50,6 +56,7 @@ public class AdminParentFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_admin_parent, container, false);
 
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         parents = new ArrayList<>();
         students = new ArrayList<>();
 
@@ -79,6 +86,7 @@ public class AdminParentFragment extends Fragment {
         final Dialog dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.layout_add_parent_dialog);
         final EditText etParentName = dialog.findViewById(R.id.etParentName);
+        final EditText etParentEmail = dialog.findViewById(R.id.etParentEmail);
         Button btnAddStudent = dialog.findViewById(R.id.btnAddParent);
         final ProgressBar pbAddParent = dialog.findViewById(R.id.pbAddParent);
 
@@ -87,22 +95,36 @@ public class AdminParentFragment extends Fragment {
             public void onClick(View v) {
                 pbAddParent.setVisibility(View.VISIBLE);
 
-                Map<String, String> parentDetail = new HashMap<>();
-                String parentName = etParentName.getText().toString();
-                parentDetail.put("name", parentName);
-
-                db.collection("Parents").document().set(parentDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                final String parentEmail = etParentEmail.getText().toString();
+                mAuth.createUserWithEmailAndPassword(parentEmail, "deneme").addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Parent Added");
-                        dialog.dismiss();
-                        pbAddParent.setVisibility(View.GONE);
+                    public void onSuccess(AuthResult authResult) {
+
+                        Map<String, String> parentDetail = new HashMap<>();
+                        String parentName = etParentName.getText().toString();
+                        parentDetail.put("name", parentName);
+                        parentDetail.put("email", parentEmail);
+                        parentDetail.put("tip", "parent");
+
+                        db.collection("Parents").document(authResult.getUser().getUid()).set(parentDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "Parent Added");
+                                dialog.dismiss();
+                                pbAddParent.setVisibility(View.GONE);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "Parent Not Added " + e.getMessage());
+                                pbAddParent.setVisibility(View.GONE);
+                            }
+                        });
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Parent Not Added " + e.getMessage());
-                        dialog.dismiss();
+                        Log.d(TAG, "mAUTH HATA: " + e.getMessage());
                         pbAddParent.setVisibility(View.GONE);
                     }
                 });

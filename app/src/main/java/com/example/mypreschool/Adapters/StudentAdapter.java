@@ -62,9 +62,12 @@ public class StudentAdapter extends BaseAdapter {
 
         CircleImageView civStudentImage = view.findViewById(R.id.civStudentImage);
         TextView tvStudentName = view.findViewById(R.id.tvStudentName);
-        ImageView ivStudentDelete = view.findViewById(R.id.ivStudentDelete);
+        final ImageView ivStudentDelete = view.findViewById(R.id.ivStudentDelete);
 
         final Student student = students.get(position);
+
+        if(onItemClickListener == null)
+            ivStudentDelete.setVisibility(View.GONE);
 
         ivStudentDelete.setOnClickListener(new View.OnClickListener() {
             @Override

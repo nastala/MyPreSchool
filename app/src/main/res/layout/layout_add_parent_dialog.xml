@@ -11,6 +11,13 @@
         android:id="@+id/etParentName"
         android:hint="Parent Name"/>
 
+    <EditText
+        android:id="@+id/etParentEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Parent E-Mail"
+        android:inputType="textEmailAddress" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

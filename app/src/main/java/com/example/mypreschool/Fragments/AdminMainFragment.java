@@ -49,15 +49,15 @@ public class AdminMainFragment extends Fragment {
         btnSchoolAdmin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goSchoolAdminFragmet();
+                goSchoolAdminFragment();
             }
         });
 
         return view;
     }
 
-    private void goSchoolAdminFragmet(){
-        Fragment hedef = new AdminStudentFragment();
+    private void goSchoolAdminFragment(){
+        Fragment hedef = new AdminSchoolFragment();
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.flMainActivity, hedef);
