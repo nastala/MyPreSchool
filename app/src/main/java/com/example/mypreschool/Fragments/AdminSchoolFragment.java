@@ -11,11 +11,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,13 +41,15 @@ public class AdminSchoolFragment extends Fragment {
     private final String TAG = "ADMINSCHOOL";
 
     private ArrayList<School> schools;
+    private School currentSchool;
     private EditText etSchoolName;
     private Button btnAddScholl;
     private ProgressBar pbAddSchool;
-    private ListView lvSchools;
+    private ListView lvSchools, lvClasses;
     private TextView tvAdminAddSchool;
     private FirebaseFirestore db;
     private ProgressBar pbAdmin;
+    private RelativeLayout rlAdminSchool;
 
     public AdminSchoolFragment() {
         // Required empty public constructor
@@ -60,9 +64,37 @@ public class AdminSchoolFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
+        rlAdminSchool = view.findViewById(R.id.rlAdminSchool);
+        pbAdmin = view.findViewById(R.id.pbAdmin);
+
+        getSchoolLayout();
+
+        return view;
+    }
+
+    private void getClassLayout(){
+        rlAdminSchool.removeAllViews();
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_admin_school_class, rlAdminSchool, true);
+
+        lvClasses = view.findViewById(R.id.lvClasses);
+        TextView tvAddClass = view.findViewById(R.id.tvAddClass);
+
+        Log.d(TAG, "School id: " + currentSchool.getSchoolID());
+
+        tvAddClass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //showAddClassDialog();
+            }
+        });
+    }
+
+    private void getSchoolLayout(){
+        rlAdminSchool.removeAllViews();
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_admin_school_school, rlAdminSchool, true);
+
         lvSchools = view.findViewById(R.id.lvSchools);
         tvAdminAddSchool = view.findViewById(R.id.tvAdminAddSchool);
-        pbAdmin = view.findViewById(R.id.pbAdmin);
 
         tvAdminAddSchool.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,9 +103,15 @@ public class AdminSchoolFragment extends Fragment {
             }
         });
 
-        getSchools();
+        lvSchools.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                currentSchool = schools.get(position);
+                getClassLayout();
+            }
+        });
 
-        return view;
+        getSchools();
     }
 
     private void getSchools(){
