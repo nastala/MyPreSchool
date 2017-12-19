@@ -97,9 +97,9 @@ public class SelectStudentScreenFragment extends Fragment {
                     Log.d(TAG, "Student name: " + student.getName());
                     Log.d(TAG, "Student sgurl: " + student.getSgurl());
                 }
-                /*StudentAdapter adapter = new StudentAdapter(getActivity(), students);
+                StudentAdapter adapter = new StudentAdapter(getActivity(), students);
                 lvStudents.setAdapter(adapter);
-                pbListStudents.setVisibility(View.GONE);*/
+                pbListStudents.setVisibility(View.GONE);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

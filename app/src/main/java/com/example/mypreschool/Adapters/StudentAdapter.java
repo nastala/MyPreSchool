@@ -36,6 +36,11 @@ public class StudentAdapter extends BaseAdapter {
         this.onItemClickListener = onItemClickListener;
     }
 
+    public StudentAdapter(Activity activity, ArrayList<Student> students) {
+        mInflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.students = students;
+    }
+
     @Override
     public int getCount() {
         return students.size();
