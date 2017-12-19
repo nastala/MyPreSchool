@@ -1,7 +1,9 @@
 package com.example.mypreschool.Fragments;
 
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.app.Fragment;
@@ -17,6 +19,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mypreschool.Adapters.SchoolAdapter;
+import com.example.mypreschool.Classes.School;
 import com.example.mypreschool.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,7 +38,7 @@ import java.util.Map;
 public class AdminSchoolFragment extends Fragment {
     private final String TAG = "ADMINSCHOOL";
 
-    private ArrayList<String> schools;
+    private ArrayList<School> schools;
     private EditText etSchoolName;
     private Button btnAddScholl;
     private ProgressBar pbAddSchool;
@@ -87,11 +91,24 @@ public class AdminSchoolFragment extends Fragment {
                         break;
                     }
 
-                    schools.add(documentSnapshot.getString("name"));
+                    School school = new School();
+                    school.setSchoolName(documentSnapshot.getString("name"));
+                    school.setSchoolID(documentSnapshot.getId());
+                    schools.add(school);
                 }
 
                 pbAdmin.setVisibility(View.GONE);
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, schools);
+                SchoolAdapter adapter = new SchoolAdapter(getActivity(), schools, new SchoolAdapter.OnItemClickListener() {
+                    @Override
+                    public void onSchoolDelete(School school) {
+                        showDeleteSchoolDialog(school);
+                    }
+
+                    @Override
+                    public void onSchoolEdit(School school) {
+                        showEditSchoolDialog(school);
+                    }
+                });
                 lvSchools.setAdapter(adapter);
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -101,6 +118,78 @@ public class AdminSchoolFragment extends Fragment {
                 Log.d(TAG, "DOCUMENT GETIRME HATA: " + e.getMessage());
             }
         });
+    }
+
+    private void showEditSchoolDialog(final School school){
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.layout_add_school_dialog);
+
+        etSchoolName = dialog.findViewById(R.id.etSchoolName);
+        btnAddScholl = dialog.findViewById(R.id.btnAddSchool);
+        pbAddSchool = dialog.findViewById(R.id.pbAddSchool);
+
+        etSchoolName.setText(school.getSchoolName());
+        btnAddScholl.setText("EDIT SCHOOL");
+
+        btnAddScholl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pbAddSchool.setVisibility(View.VISIBLE);
+
+                Map<String, Object> map = new HashMap<>();
+                map.put("name", etSchoolName.getText().toString());
+
+                db.collection("Schools").document(school.getSchoolID()).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getActivity(), "School updated", Toast.LENGTH_SHORT).show();
+                        pbAdmin.setVisibility(View.GONE);
+                        dialog.dismiss();
+                        getSchools();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "School edit error: " + e.getMessage());
+                    }
+                });
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void showDeleteSchoolDialog(final School school){
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle("UYARI");
+        alertDialog.setMessage("Okulu silmek istediğinizden emin misiniz?");
+        alertDialog.setCancelable(false);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "EVET", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.d(TAG, school.getSchoolID());
+                db.collection("Schools").document(school.getSchoolID()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getActivity(), "School removed", Toast.LENGTH_SHORT).show();
+                        getSchools();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "School delete error: " + e.getMessage());
+                    }
+                });
+            }
+        });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "HAYIR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
     }
 
     private void showAddSchoolDialog(){
