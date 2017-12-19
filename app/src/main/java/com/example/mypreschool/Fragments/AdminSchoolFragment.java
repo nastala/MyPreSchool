@@ -21,8 +21,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mypreschool.Adapters.ClassAdapter;
 import com.example.mypreschool.Adapters.SchoolAdapter;
 import com.example.mypreschool.Classes.School;
+import com.example.mypreschool.Classes.SchoolClass;
 import com.example.mypreschool.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,6 +43,7 @@ public class AdminSchoolFragment extends Fragment {
     private final String TAG = "ADMINSCHOOL";
 
     private ArrayList<School> schools;
+    private ArrayList<SchoolClass> classes;
     private School currentSchool;
     private EditText etSchoolName;
     private Button btnAddScholl;
@@ -84,9 +87,160 @@ public class AdminSchoolFragment extends Fragment {
         tvAddClass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //showAddClassDialog();
+                showAddClassDialog();
             }
         });
+
+        getClasses();
+    }
+
+    private void getClasses(){
+        classes = new ArrayList<>();
+
+        db.collection("Schools").document(currentSchool.getSchoolID()).collection("Classes").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                for(DocumentSnapshot documentSnapshot : documentSnapshots){
+                    if(!(documentSnapshot.exists())){
+                        Log.d(TAG, "CLASS DOES NOT EXIST, SCHOOL ID: " + currentSchool.getSchoolID());
+                    }
+
+                    SchoolClass schoolClass = new SchoolClass();
+                    schoolClass.setClassID(documentSnapshot.getId());
+                    schoolClass.setClassName(documentSnapshot.getString("name"));
+                    schoolClass.setTeacherAssigned(documentSnapshot.getBoolean("teacher_assigned"));
+                    classes.add(schoolClass);
+                }
+
+                ClassAdapter adapter = new ClassAdapter(getActivity(), classes, new ClassAdapter.OnItemClickListener() {
+                    @Override
+                    public void onClassDelete(SchoolClass schoolClass) {
+                        showDeleteClassDialog(schoolClass);
+                    }
+
+                    @Override
+                    public void onClassEdit(SchoolClass schoolClass) {
+                        showEditClassDialog(schoolClass);
+                    }
+                });
+
+                lvClasses.setAdapter(adapter);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "GET CLASSES ERROR: " + e.getMessage());
+            }
+        });
+    }
+
+    private void showEditClassDialog(final SchoolClass schoolClass){
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.layout_add_class_dialog);
+
+        final EditText etClassName = dialog.findViewById(R.id.etClassName);
+        Button btnAddClass = dialog.findViewById(R.id.btnAddClass);
+        final ProgressBar pbAddClass = dialog.findViewById(R.id.pbAddClass);
+
+        etClassName.setText(schoolClass.getClassName());
+        btnAddClass.setText("Edit Class");
+
+        btnAddClass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pbAddClass.setVisibility(View.VISIBLE);
+                Map<String, Object> map = new HashMap<>();
+                map.put("name", etClassName.getText().toString());
+
+                db.collection("Schools").document(currentSchool.getSchoolID()).collection("Classes").document(schoolClass.getClassID()).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getActivity(), "Class Added", Toast.LENGTH_SHORT).show();
+                        pbAddClass.setVisibility(View.GONE);
+                        getClasses();
+                        dialog.dismiss();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Class add error: " + e.getMessage());
+                        pbAddClass.setVisibility(View.GONE);
+                    }
+                });
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void showDeleteClassDialog(final SchoolClass schoolClass){
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle("UYARI");
+        alertDialog.setMessage("Sınıfı silmek istediğinizden emin misiniz?");
+        alertDialog.setCancelable(false);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "EVET", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.d(TAG, schoolClass.getClassID());
+                db.collection("Schools").document(currentSchool.getSchoolID()).collection("Classes").document(schoolClass.getClassID()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getActivity(), "Class removed", Toast.LENGTH_SHORT).show();
+                        getClasses();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Class delete error: " + e.getMessage());
+                    }
+                });
+            }
+        });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "HAYIR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    private void showAddClassDialog(){
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.layout_add_class_dialog);
+
+        final EditText etClassName = dialog.findViewById(R.id.etClassName);
+        Button btnAddClass = dialog.findViewById(R.id.btnAddClass);
+        final ProgressBar pbAddClass = dialog.findViewById(R.id.pbAddClass);
+
+        btnAddClass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pbAddClass.setVisibility(View.VISIBLE);
+                Map<String, Object> map = new HashMap<>();
+                map.put("name", etClassName.getText().toString());
+                map.put("teacher_assigned", false);
+
+                db.collection("Schools").document(currentSchool.getSchoolID()).collection("Classes").document().set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getActivity(), "Class Added", Toast.LENGTH_SHORT).show();
+                        pbAddClass.setVisibility(View.GONE);
+                        getClasses();
+                        dialog.dismiss();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Class add error: " + e.getMessage());
+                        pbAddClass.setVisibility(View.GONE);
+                    }
+                });
+            }
+        });
+
+        dialog.show();
     }
 
     private void getSchoolLayout(){
