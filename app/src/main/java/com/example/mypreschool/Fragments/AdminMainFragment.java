@@ -52,12 +52,27 @@ public class AdminMainFragment extends Fragment {
                 goSchoolAdminFragment();
             }
         });
+        btnTeacherAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goTeacherAdminFragment();
+            }
+        });
 
         return view;
     }
 
     private void goSchoolAdminFragment(){
         Fragment hedef = new AdminSchoolFragment();
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.flMainActivity, hedef);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
+
+    private void goTeacherAdminFragment(){
+        Fragment hedef = new AdminTeacherFragment();
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.flMainActivity, hedef);
