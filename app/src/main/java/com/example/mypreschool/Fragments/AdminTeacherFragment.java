@@ -29,6 +29,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -52,10 +54,11 @@ public class AdminTeacherFragment extends Fragment {
     private ListView lvTeachers;
     private TextView tvAddTeacher;
     private FirebaseFirestore db;
-    private EditText etTeacherName, etTeacherPhoneNumber;
+    private EditText etTeacherName, etTeacherPhoneNumber, etTeacherEmail;
     private Spinner spnSchools, spnClasses;
     private ProgressBar pbAddTeacher;
     private Dialog dialog;
+    private FirebaseAuth mAuth;
     private int tcID, tsID;
 
     public AdminTeacherFragment() {
@@ -70,6 +73,7 @@ public class AdminTeacherFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_admin_teacher, container, false);
 
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         lvTeachers = view.findViewById(R.id.lvTeachers);
         tvAddTeacher = view.findViewById(R.id.tvAddTeacher);
@@ -103,6 +107,7 @@ public class AdminTeacherFragment extends Fragment {
                     teacher.setTeacherPhoneNumber(documentSnapshot.getString("phoneNumber"));
                     teacher.setTeacherID(documentSnapshot.getId());
                     teacher.setTeacherSchoolID(documentSnapshot.getString("schoolID"));
+                    teacher.setTeacherEmail(documentSnapshot.getString("email"));
 
                     teachersNames.add(teacher.getTeacherName());
                     teachers.add(teacher);
@@ -216,6 +221,7 @@ public class AdminTeacherFragment extends Fragment {
         etTeacherName = dialog.findViewById(R.id.etTeacherName);
         etTeacherPhoneNumber = dialog.findViewById(R.id.etTeacherPhoneNumber);
         pbAddTeacher = dialog.findViewById(R.id.pbAddTeacher);
+        etTeacherEmail = dialog.findViewById(R.id.etTeacherEmail);
 
         tvAddTeacher.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -249,13 +255,31 @@ public class AdminTeacherFragment extends Fragment {
             return;
 
         pbAddTeacher.setVisibility(View.VISIBLE);
-        String teacherPN = (etTeacherPhoneNumber.getText().toString());
+        final String teacherPN = (etTeacherPhoneNumber.getText().toString());
+        final String teacherName = etTeacherName.getText().toString();
+        final String teacherEmail = etTeacherEmail.getText().toString();
 
+        mAuth.createUserWithEmailAndPassword(teacherEmail, "deneme").addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                teacheriEkle(teacherName, teacherPN, teacherEmail, authResult.getUser().getUid());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("ADMINTEACHER", "TEACHER AUTH HATA: " + e.getMessage());
+                pbAddTeacher.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void teacheriEkle(String teacherName, String teacherPN, String teacherEmail, String id){
         Map<String, Object> teacherDetails = new HashMap<>();
-        teacherDetails.put("name", etTeacherName.getText().toString());
+        teacherDetails.put("name", teacherName);
         teacherDetails.put("classID", classes.get((int)spnClasses.getSelectedItemId()).getClassID());
         teacherDetails.put("phoneNumber", teacherPN);
         teacherDetails.put("schoolID", schools.get((int)spnSchools.getSelectedItemId()).getSchoolID());
+        teacherDetails.put("email", teacherEmail);
 
         Map<String, Object> map = new HashMap<>();
         map.put("teacher_assigned", true);
@@ -265,7 +289,12 @@ public class AdminTeacherFragment extends Fragment {
         Log.d("ADMINTEACHER", "School Name: " + schools.get((int) spnSchools.getSelectedItemId()).getSchoolName());
         Log.d("ADMINTEACHER", "Class Name: " + classes.get((int) spnClasses.getSelectedItemId()).getClassName());
 
-        DocumentReference teacherRef = db.collection("Teachers").document();
+        Map<String, String> userDetail = new HashMap<>();
+        userDetail.put("userName", teacherName);
+        userDetail.put("type", "teacher");
+
+        DocumentReference userRef = db.collection("Users").document(id);
+        DocumentReference teacherRef = db.collection("Teachers").document(id);
         DocumentReference classRef = db.collection("Schools").document(schools.get((int) spnSchools.getSelectedItemId()).
                 getSchoolID()).collection("Classes").document(classes.get((int) spnClasses.getSelectedItemId()).getClassID());
 
@@ -273,6 +302,7 @@ public class AdminTeacherFragment extends Fragment {
 
         batch.set(teacherRef, teacherDetails);
         batch.update(classRef, map);
+        batch.set(userRef, userDetail);
 
         batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -290,7 +320,6 @@ public class AdminTeacherFragment extends Fragment {
                 pbAddTeacher.setVisibility(View.GONE);
             }
         });
-
     }
 
     private void editTeacher(Teacher teacher){

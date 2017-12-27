@@ -10,8 +10,17 @@ public class Teacher {
     private String teacherID;
     private String TeacherSchoolID;
     private String teacherPhoneNumber;
+    private String teacherEmail;
 
     public Teacher() {
+    }
+
+    public String getTeacherEmail() {
+        return teacherEmail;
+    }
+
+    public void setTeacherEmail(String teacherEmail) {
+        this.teacherEmail = teacherEmail;
     }
 
     public String getTeacherID() {

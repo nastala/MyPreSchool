@@ -19,8 +19,10 @@ import android.widget.TextView;
 import com.example.mypreschool.Classes.Parent;
 import com.example.mypreschool.Classes.Student;
 import com.example.mypreschool.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -99,6 +101,10 @@ public class AdminParentFragment extends Fragment {
                 mAuth.createUserWithEmailAndPassword(parentEmail, "deneme").addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
+                        WriteBatch batch = db.batch();
+
+                        DocumentReference parentRef = db.collection("Parents").document(authResult.getUser().getUid());
+                        DocumentReference userRef = db.collection("Users").document(authResult.getUser().getUid());
 
                         Map<String, String> parentDetail = new HashMap<>();
                         String parentName = etParentName.getText().toString();
@@ -106,18 +112,25 @@ public class AdminParentFragment extends Fragment {
                         parentDetail.put("email", parentEmail);
                         parentDetail.put("tip", "parent");
 
-                        db.collection("Parents").document(authResult.getUser().getUid()).set(parentDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        Map<String, String> userDetail = new HashMap<>();
+                        userDetail.put("userName", parentName);
+                        userDetail.put("type", "parent");
+
+                        batch.set(userRef, userDetail);
+                        batch.set(parentRef, parentDetail);
+
+                        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "Parent Added");
-                                dialog.dismiss();
-                                pbAddParent.setVisibility(View.GONE);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG, "Parent Not Added " + e.getMessage());
-                                pbAddParent.setVisibility(View.GONE);
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    Log.d(TAG, "Parent Added");
+                                    dialog.dismiss();
+                                    pbAddParent.setVisibility(View.GONE);
+                                }
+                                else {
+                                    dialog.dismiss();
+                                    pbAddParent.setVisibility(View.GONE);
+                                }
                             }
                         });
                     }
