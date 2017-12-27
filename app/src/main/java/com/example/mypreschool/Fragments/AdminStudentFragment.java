@@ -27,14 +27,18 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.mypreschool.Adapters.StudentAdapter;
 import com.example.mypreschool.Classes.Parent;
+import com.example.mypreschool.Classes.School;
+import com.example.mypreschool.Classes.SchoolClass;
 import com.example.mypreschool.Classes.Student;
 import com.example.mypreschool.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -64,9 +68,12 @@ public class AdminStudentFragment extends Fragment {
     private LinearLayout llAdminStudents;
     private Parent mParent;
     private Dialog dialog;
-
+    private ArrayList<School> schools;
+    private ArrayList<SchoolClass> classes;
+    private ProgressBar pbAddStudent;
     private ArrayList<Parent> parents;
     private ArrayList<Student> students;
+    private Spinner spnSchools, spnClasses;
 
     public AdminStudentFragment() {
         // Required empty public constructor
@@ -111,6 +118,77 @@ public class AdminStudentFragment extends Fragment {
         return view;
     }
 
+    private void fillDialogClasses(int position){
+        pbAdmin.setVisibility(View.VISIBLE);
+        classes = new ArrayList<>();
+        final ArrayList<String> classesNames = new ArrayList<>();
+
+        CollectionReference collectionReference = db.collection("Schools").document(schools.get(position).getSchoolID()).collection("Classes");
+
+        collectionReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                for(DocumentSnapshot documentSnapshot : documentSnapshots){
+                    if(!(documentSnapshot.exists())) {
+                        Toast.makeText(getActivity(), "Herhangi bir sınıf bulunamadı", Toast.LENGTH_SHORT).show();
+
+                        continue;
+                    }
+
+                    SchoolClass schoolClass = new SchoolClass();
+                    schoolClass.setClassName(documentSnapshot.getString("name"));
+                    schoolClass.setClassID(documentSnapshot.getId());
+
+                    classesNames.add(schoolClass.getClassName());
+                    classes.add(schoolClass);
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, classesNames);
+                spnClasses.setAdapter(adapter);
+                pbAdmin.setVisibility(View.GONE);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                pbAdmin.setVisibility(View.GONE);
+                Log.d("ADMINTEACHER", "ERROR BRINGING CLASSES E: " + e.getMessage());
+            }
+        });
+    }
+
+    private void fillDialogSchools(){
+        pbAdmin.setVisibility(View.VISIBLE);
+        schools = new ArrayList<>();
+        final ArrayList<String> schoolsNames = new ArrayList<>();
+
+        db.collection("Schools").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                for(DocumentSnapshot documentSnapshot : documentSnapshots){
+                    if(!(documentSnapshot.exists()))
+                        continue;
+
+                    School school = new School();
+                    school.setSchoolName(documentSnapshot.getString("name"));
+                    school.setSchoolID(documentSnapshot.getId());
+
+                    schools.add(school);
+                    schoolsNames.add(school.getSchoolName());
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, schoolsNames);
+                spnSchools.setAdapter(adapter);
+                pbAdmin.setVisibility(View.GONE);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("ADMINTEACHER", "ERROR BRINGING SCHOOLS E: " + e.getMessage());
+                pbAdmin.setVisibility(View.GONE);
+            }
+        });
+    }
+
     private void bringParents(){
         final ArrayList<String> parents2 = new ArrayList<>();
         pbAdmin.setVisibility(View.VISIBLE);
@@ -133,7 +211,7 @@ public class AdminStudentFragment extends Fragment {
                     mParent = parents.get(0);
                     listStudents(mParent.getUid());
                 }
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, parents2);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, parents2);
                 spnAdminParent.setAdapter(arrayAdapter);
                 pbAdmin.setVisibility(View.GONE);
             }
@@ -243,58 +321,100 @@ public class AdminStudentFragment extends Fragment {
     }
 
     private void showAddStudentDialog(final String parentID){
-        final Dialog dialog = new Dialog(getActivity());
+        dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.layout_add_student_dialog);
+        spnClasses = dialog.findViewById(R.id.spnClasses);
+        spnSchools = dialog.findViewById(R.id.spnSchools);
         final EditText etStudentName = dialog.findViewById(R.id.etStudentName);
         Button btnAddStudent = dialog.findViewById(R.id.btnAddStudent);
         CircleImageView civStudent = dialog.findViewById(R.id.civStudent);
-        final ProgressBar pbAddStudent = dialog.findViewById(R.id.pbAddStudent);
+        pbAddStudent = dialog.findViewById(R.id.pbAddStudent);
         mStorage = FirebaseStorage.getInstance().getReference();
 
         civStudent.setVisibility(View.GONE);
 
-        btnAddStudent.setOnClickListener(new View.OnClickListener() {
+        spnSchools.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                pbAddStudent.setVisibility(View.VISIBLE);
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                classes = null;
+                fillDialogClasses(position);
+            }
 
-                Map<String, String> studentDetail = new HashMap<>();
-                String studentName = etStudentName.getText().toString();
-                studentDetail.put("name", studentName);
-                studentDetail.put("parentID", parentID);
-                studentDetail.put("sgurl", "default");
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-                db.collection("Parents").document(parentID).collection("Students").document().set(studentDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Student Added");
-                        dialog.dismiss();
-                        pbAddStudent.setVisibility(View.GONE);
-                        students.clear();
-                        listStudents(parentID);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Student Not Added");
-                        dialog.dismiss();
-                        pbAddStudent.setVisibility(View.GONE);
-                    }
-                });
             }
         });
 
+        btnAddStudent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(etStudentName.getText().toString().isEmpty())
+                    return;
+
+                if(parentID == null)
+                    return;
+
+                addStudent(etStudentName.getText().toString(), parentID);
+            }
+        });
+
+        fillDialogSchools();
         dialog.show();
+    }
+
+    private void addStudent(String studentName, final String parentID){
+        if(classes.size() < 1)
+            return;
+
+        if(schools.size() < 1)
+            return;
+
+        pbAddStudent.setVisibility(View.VISIBLE);
+
+        Map<String, String> studentDetail = new HashMap<>();
+        studentDetail.put("name", studentName);
+        studentDetail.put("parentID", parentID);
+        studentDetail.put("sgurl", "default");
+        studentDetail.put("classID", classes.get((int)spnClasses.getSelectedItemId()).getClassID());
+        studentDetail.put("schoolID", schools.get((int)spnSchools.getSelectedItemId()).getSchoolID());
+
+        db.collection("Parents").document(parentID).collection("Students").document().set(studentDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "Student Added");
+                dialog.dismiss();
+                pbAddStudent.setVisibility(View.GONE);
+                students.clear();
+                listStudents(parentID);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Student Not Added");
+                dialog.dismiss();
+                pbAddStudent.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void showEditStudentDialog(final Student student){
         final Dialog dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.layout_add_student_dialog);
+        spnClasses = dialog.findViewById(R.id.spnClasses);
+        spnSchools = dialog.findViewById(R.id.spnSchools);
+        TextView tvSelectSchool = dialog.findViewById(R.id.tvSelectSchool);
+        TextView tvSelectClass = dialog.findViewById(R.id.tvSelectClass);
         final EditText etStudentName = dialog.findViewById(R.id.etStudentName);
         Button btnAddStudent = dialog.findViewById(R.id.btnAddStudent);
         civStudent = dialog.findViewById(R.id.civStudent);
         final ProgressBar pbAddStudent = dialog.findViewById(R.id.pbAddStudent);
         mStorage = FirebaseStorage.getInstance().getReference();
+
+        spnClasses.setVisibility(View.GONE);
+        spnSchools.setVisibility(View.GONE);
+        tvSelectClass.setVisibility(View.GONE);
+        tvSelectSchool.setVisibility(View.GONE);
 
         if(!(student.getSgurl().equals("default"))){
             Glide.with(civStudent.getContext())

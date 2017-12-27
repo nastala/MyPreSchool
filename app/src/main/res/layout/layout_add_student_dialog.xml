@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="200dp"
-    android:layout_height="265dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -20,11 +20,35 @@
         android:id="@+id/etStudentName"
         android:hint="Student Name"/>
 
-    <EditText
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/etStudentSchoolID"
-        android:hint="Student School ID"/>
+        android:text="Select School"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:id="@+id/tvSelectSchool"/>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:id="@+id/spnSchools"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Class"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:id="@+id/tvSelectClass"/>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:id="@+id/spnClasses"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"/>
 
     <Button
         android:layout_width="wrap_content"
