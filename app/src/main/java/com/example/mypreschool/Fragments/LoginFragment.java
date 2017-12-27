@@ -16,10 +16,12 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.mypreschool.R;
+import com.example.mypreschool.SharedPref;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
@@ -33,6 +35,7 @@ public class LoginFragment extends Fragment {
     private Button btnLogin;
     private ProgressBar pbLogin;
     private FirebaseFirestore db;
+    private SharedPref sharedPref;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -46,6 +49,7 @@ public class LoginFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         db = FirebaseFirestore.getInstance();
+        sharedPref = new SharedPref(getActivity().getApplicationContext());
 
         mAuth = FirebaseAuth.getInstance();
         etEmail = view.findViewById(R.id.etEmail);
@@ -69,7 +73,12 @@ public class LoginFragment extends Fragment {
 
     private void authKontrolEt(){
         if(mAuth.getCurrentUser() != null){
-            veliOgrenciEkraninaGit();
+            String tip = sharedPref.getTip();
+            if(tip.equals("teache")){
+                teacherEkraninaGit();
+            }
+            else
+                veliOgrenciEkraninaGit();
         }
     }
 
@@ -91,8 +100,7 @@ public class LoginFragment extends Fragment {
             public void onSuccess(AuthResult authResult) {
                 Log.d(TAG, "LOGIN BASARILI");
 
-                tipiGetir();
-                veliOgrenciEkraninaGit();
+                tipiGetir(authResult.getUser().getUid());
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -102,8 +110,41 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    private void tipiGetir(){
-        //db.collection()
+    private void tipiGetir(String id){
+        db.collection("Users").document(id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(!documentSnapshot.exists()) {
+                    pbLogin.setVisibility(View.GONE);
+                    return;
+                }
+
+                String tip = documentSnapshot.getString("type");
+
+                if(tip.equals("teacher")){
+                    teacherEkraninaGit();
+                }
+                else {
+                    veliOgrenciEkraninaGit();
+                }
+
+                sharedPref.setTip(tip);
+                Log.d(TAG, "TIP GELDI " + tip);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "TIP GETIRME HATA: " + e.getMessage());
+                pbLogin.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void teacherEkraninaGit(){
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(R.id.flMainActivity, new TeacherMainFragment());
+        fragmentTransaction.commit();
     }
 
     private void veliOgrenciEkraninaGit(){

@@ -4,6 +4,8 @@ package com.example.mypreschool.Fragments;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.app.Fragment;
@@ -20,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.mypreschool.Adapters.TeacherAdapter;
 import com.example.mypreschool.Classes.School;
 import com.example.mypreschool.Classes.SchoolClass;
@@ -38,15 +41,21 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class AdminTeacherFragment extends Fragment {
+    private static final int IMAGE_REQUEST = 10001;
     private ArrayList<Teacher> teachers;
     private ArrayList<String>teachersNames;
     private ArrayList<School> schools;
@@ -59,7 +68,10 @@ public class AdminTeacherFragment extends Fragment {
     private ProgressBar pbAddTeacher;
     private Dialog dialog;
     private FirebaseAuth mAuth;
+    private CircleImageView civTeacher;
+    private StorageReference mStorage;
     private int tcID, tsID;
+    private Teacher teacher;
 
     public AdminTeacherFragment() {
         // Required empty public constructor
@@ -74,6 +86,7 @@ public class AdminTeacherFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+        mStorage = FirebaseStorage.getInstance().getReference();
 
         lvTeachers = view.findViewById(R.id.lvTeachers);
         tvAddTeacher = view.findViewById(R.id.tvAddTeacher);
@@ -108,6 +121,7 @@ public class AdminTeacherFragment extends Fragment {
                     teacher.setTeacherID(documentSnapshot.getId());
                     teacher.setTeacherSchoolID(documentSnapshot.getString("schoolID"));
                     teacher.setTeacherEmail(documentSnapshot.getString("email"));
+                    teacher.setTeacherPhoto("sgurl");
 
                     teachersNames.add(teacher.getTeacherName());
                     teachers.add(teacher);
@@ -184,6 +198,8 @@ public class AdminTeacherFragment extends Fragment {
     }
 
     private void showEditTeacherDialog(final Teacher teacher){
+        this.teacher = teacher;
+
         dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.layout_add_teacher_dialog);
 
@@ -193,6 +209,27 @@ public class AdminTeacherFragment extends Fragment {
         etTeacherName = dialog.findViewById(R.id.etTeacherName);
         etTeacherPhoneNumber = dialog.findViewById(R.id.etTeacherPhoneNumber);
         pbAddTeacher = dialog.findViewById(R.id.pbAddTeacher);
+        civTeacher = dialog.findViewById(R.id.civTeacher);
+
+        civTeacher.setVisibility(View.VISIBLE);
+
+        if(!(teacher.getTeacherPhoto().equals("default"))){
+            Glide.with(civTeacher.getContext())
+                    .load(teacher.getTeacherPhoto())
+                    .into(civTeacher);
+        }
+        else {
+            civTeacher.setImageResource(R.drawable.defaultprofil);
+        }
+
+        civTeacher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, IMAGE_REQUEST);
+            }
+        });
 
         tvAddTeacher.setText("Edit Teacher");
         etTeacherName.setText(teacher.getTeacherName());
@@ -280,6 +317,7 @@ public class AdminTeacherFragment extends Fragment {
         teacherDetails.put("phoneNumber", teacherPN);
         teacherDetails.put("schoolID", schools.get((int)spnSchools.getSelectedItemId()).getSchoolID());
         teacherDetails.put("email", teacherEmail);
+        teacherDetails.put("sgurl", "default");
 
         Map<String, Object> map = new HashMap<>();
         map.put("teacher_assigned", true);
@@ -424,5 +462,62 @@ public class AdminTeacherFragment extends Fragment {
                 pbAddTeacher.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void yukleniyorDialogGoster(){
+        dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.layout_progress_bar);
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
+    private void yukleniyorDialogKapat(){
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == IMAGE_REQUEST){
+            if(data.getData() == null)
+                return;
+
+            yukleniyorDialogGoster();
+            Uri uri = data.getData();
+            Glide.with(civTeacher.getContext())
+                    .load(uri)
+                    .into(civTeacher);
+
+            StorageReference filePath = mStorage.child(teacher.getTeacherID());
+            filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadUri = taskSnapshot.getDownloadUrl();
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("sgurl", downloadUri.toString());
+
+                    db.collection("Teachers").document(teacher.getTeacherID()).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("ADMINTEACHER", "TEACHER SGURL GUNCELLENDI");
+                            yukleniyorDialogKapat();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("ADMINTEACHER", "TEACHER SGURL GUNCELLENEMEDI HATA: " + e.getMessage());
+                            yukleniyorDialogKapat();
+                        }
+                    });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("ADMINTEACHER", "TEACHER FIREBASE STORAGE HATA: " + e.getMessage());
+                    yukleniyorDialogKapat();
+                }
+            });
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

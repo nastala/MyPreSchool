@@ -12,6 +12,13 @@
         android:id="@+id/pbAddTeacher"
         android:visibility="gone"/>
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_gravity="center"
+        android:id="@+id/civTeacher"
+        android:visibility="gone"/>
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

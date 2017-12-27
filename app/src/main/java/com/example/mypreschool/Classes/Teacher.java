@@ -11,8 +11,17 @@ public class Teacher {
     private String TeacherSchoolID;
     private String teacherPhoneNumber;
     private String teacherEmail;
+    private String teacherPhoto;
 
     public Teacher() {
+    }
+
+    public String getTeacherPhoto() {
+        return teacherPhoto;
+    }
+
+    public void setTeacherPhoto(String teacherPhoto) {
+        this.teacherPhoto = teacherPhoto;
     }
 
     public String getTeacherEmail() {
