@@ -103,7 +103,8 @@ public class ShareActivityAdapter extends BaseAdapter {
         });
 
         if(shareActivity.getCurrentParentLiked()){
-            btnLike.setBackgroundColor(R.color.colorPrimary);
+            btnLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.liked2, 0, 0, 0);
+            btnLike.setText("LIKED");
         }
 
         return view;

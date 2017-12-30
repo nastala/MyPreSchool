@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +33,8 @@ import com.example.mypreschool.Classes.ShareActivity;
 import com.example.mypreschool.Classes.Student;
 import com.example.mypreschool.R;
 import com.example.mypreschool.StudentMainActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -46,6 +49,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -242,9 +247,26 @@ public class StudentShareListFragment extends Fragment {
     }
 
     private void shareActivityLikeArttir(ShareActivity shareActivity){
-        WriteBatch batch = db.batch();
-        DocumentReference likeRef = db.collection("ShareActivities").document(shareActivity.getId()).collection("Likes").document(student.getParentID());
+        if(shareActivity.getCurrentParentLiked())
+            return;
 
+        ArrayList<String> likedParents = shareActivity.getLikedParents();
+        likedParents.add(student.getParentID());
+        Map<String, Object> map = new HashMap<>();
+        map.put("likedParents", likedParents);
+        map.put("likes", shareActivity.getLikeNumber() + 1);
+
+        db.collection("ShareActivities").document(shareActivity.getId()).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "Like arttırıldı");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Like arttırma hata: " + e.getMessage());
+            }
+        });
     }
 
     public void setStudent(Student student){
