@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ public class TeacherFoodListFragment extends Fragment {
     private Date dateNow2, seledtedDate2;
     private Teacher teacher;
     private CalendarView cvCalendar;
+    private Button btnStudentStat;
 
     public TeacherFoodListFragment() {
         // Required empty public constructor
@@ -43,6 +45,21 @@ public class TeacherFoodListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_teacher_food_list, container, false);
 
         cvCalendar = view.findViewById(R.id.cvCalendar);
+        btnStudentStat = view.findViewById(R.id.btnStudentStat);
+
+        btnStudentStat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TeacherStudentFoodStatFragment hedef = new TeacherStudentFoodStatFragment();
+                hedef.setTeacher(teacher);
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                fragmentTransaction.replace(R.id.flMainActivity, hedef);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
         cvCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
@@ -63,7 +80,7 @@ public class TeacherFoodListFragment extends Fragment {
                 if(!(seledtedDate2.before(dateNow2)))
                     calendarDetayFragmentGetir();
                 else
-                    Toast.makeText(getActivity(), "You selected a date before current date, please reselect", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "You selected a date before the current date, please reselect", Toast.LENGTH_LONG).show();
             }
         });
 

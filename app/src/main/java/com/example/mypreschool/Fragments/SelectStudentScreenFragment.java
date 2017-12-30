@@ -78,7 +78,7 @@ public class SelectStudentScreenFragment extends Fragment {
 
         pbListStudents.setVisibility(View.VISIBLE);
         String uid = mAuth.getUid();
-        db.collection("Parents").document(uid).collection("Students").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        db.collection("Students").whereEqualTo("parentID", uid).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
                 if(documentSnapshots == null)

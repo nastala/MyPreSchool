@@ -20,13 +20,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mypreschool.Classes.Student;
 import com.example.mypreschool.Classes.Teacher;
 import com.example.mypreschool.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,6 +57,7 @@ public class TeacherCalendarDetayFragment extends Fragment {
     private boolean foodKontrol;
     private String selectedDateString;
     private ArrayList<String> foods;
+    private ArrayList<Student> students;
 
     public TeacherCalendarDetayFragment() {
         // Required empty public constructor
@@ -75,6 +81,7 @@ public class TeacherCalendarDetayFragment extends Fragment {
         llFood = view.findViewById(R.id.llFood);
 
         foods = new ArrayList<>();
+        students = new ArrayList<>();
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,14 +114,17 @@ public class TeacherCalendarDetayFragment extends Fragment {
             public void onClick(View v) {
                 if(!foodKontrol)
                     dbyeKaydet();
-                else
+                else {
                     dbyiGuncelle();
+                }
             }
         });
 
         yemekKontrolEt();
         return view;
     }
+
+
 
     private void dbyeKaydet(){
         if(foods == null || foods.size() < 1)

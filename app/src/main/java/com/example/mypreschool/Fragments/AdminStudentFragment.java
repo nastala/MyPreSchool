@@ -227,7 +227,7 @@ public class AdminStudentFragment extends Fragment {
         students.clear();
         lvStudents.setAdapter(null);
         pbAdmin.setVisibility(View.VISIBLE);
-        db.collection("Parents").document(parentID).collection("Students").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        db.collection("Students").whereEqualTo("parentID", parentID).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
                 if(documentSnapshots == null) {
@@ -292,7 +292,7 @@ public class AdminStudentFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 pbAdmin.setVisibility(View.VISIBLE);
-                db.collection("Parents").document(mParent.getUid()).collection("Students").document(student.getStudentID()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                db.collection("Students").document(student.getStudentID()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(getActivity(), "Student has been removed", Toast.LENGTH_SHORT).show();
@@ -379,7 +379,7 @@ public class AdminStudentFragment extends Fragment {
         studentDetail.put("classID", classes.get((int)spnClasses.getSelectedItemId()).getClassID());
         studentDetail.put("schoolID", schools.get((int)spnSchools.getSelectedItemId()).getSchoolID());
 
-        db.collection("Parents").document(parentID).collection("Students").document().set(studentDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
+        db.collection("Students").document().set(studentDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.d(TAG, "Student Added");
@@ -446,7 +446,7 @@ public class AdminStudentFragment extends Fragment {
                 String studentName = etStudentName.getText().toString();
                 studentDetail.put("name", studentName);
 
-                db.collection("Parents").document(student.getParentID()).collection("Students").document(student.getStudentID()).update(studentDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                db.collection("Students").document(student.getStudentID()).update(studentDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Student Added");
@@ -500,7 +500,7 @@ public class AdminStudentFragment extends Fragment {
                     Map<String, Object> map = new HashMap<>();
                     map.put("sgurl", downloadUri.toString());
 
-                    db.collection("Parents").document(mParent.getUid()).collection("Students").document(student.getStudentID()).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    db.collection("Students").document(student.getStudentID()).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.d(TAG, "STUDENT SGURL GUNCELLENDI");
