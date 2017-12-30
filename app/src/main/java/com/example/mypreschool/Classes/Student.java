@@ -7,9 +7,26 @@ import java.io.Serializable;
  */
 
 public class Student implements Serializable{
-    private String name, sgurl, parentID, studentID, classID, schoolID;
+    private String name, sgurl, parentID, studentID, classID, schoolID, stat;
+    private boolean isStated;
 
     public Student() {
+    }
+
+    public String getStat() {
+        return stat;
+    }
+
+    public void setStat(String stat) {
+        this.stat = stat;
+    }
+
+    public boolean isStated() {
+        return isStated;
+    }
+
+    public void setStated(boolean stated) {
+        isStated = stated;
     }
 
     public String getClassID() {
