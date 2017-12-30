@@ -1,4 +1,4 @@
-package com.example.mypreschool.Fragments;
+package com.example.mypreschool.Fragments.TeacherFragments;
 
 
 import android.app.FragmentManager;
@@ -24,7 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * A simple {@link Fragment} subclass.
  */
 public class TeacherMainFragment extends Fragment {
-    private Button btnShareActivity;
+    private Button btnShareActivity, btnFoodList;
     private Teacher teacher;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -44,24 +44,48 @@ public class TeacherMainFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         btnShareActivity = view.findViewById(R.id.btnShareActivity);
+        btnFoodList = view.findViewById(R.id.btnFoodList);
+
         btnShareActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TeacherShareActivityFragment hedef = new TeacherShareActivityFragment();
                 hedef.setTeacher(teacher);
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.flMainActivity, hedef);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                ekranaGit(hedef);
             }
         });
 
-        btnShareActivity.setClickable(false);
+        btnFoodList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TeacherFoodListFragment hedef = new TeacherFoodListFragment();
+                hedef.setTeacher(teacher);
+                ekranaGit(hedef);
+            }
+        });
 
+        butonlariPasifEt();
         teacherDetaylariGetir();
 
         return view;
+    }
+
+    private void butonlariAktifEt(){
+        btnShareActivity.setClickable(true);
+        btnFoodList.setClickable(true);
+    }
+
+    private void butonlariPasifEt(){
+        btnShareActivity.setClickable(false);
+        btnFoodList.setClickable(false);
+    }
+
+    private void ekranaGit(Fragment hedef){
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(R.id.flMainActivity, hedef);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     private void teacherDetaylariGetir(){
@@ -79,7 +103,7 @@ public class TeacherMainFragment extends Fragment {
                 teacher.setTeacherPhoneNumber(documentSnapshot.getString("phoneNumber"));
                 teacher.setTeacherClassID(documentSnapshot.getString("classID"));
                 teacher.setTeacherPhoto(documentSnapshot.getString("sgurl"));
-                btnShareActivity.setClickable(true);
+                butonlariAktifEt();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
