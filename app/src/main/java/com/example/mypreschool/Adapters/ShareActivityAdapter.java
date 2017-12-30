@@ -97,7 +97,7 @@ public class ShareActivityAdapter extends BaseAdapter {
         btnLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(onItemClickListener != null && !(shareActivity.getCurrentParentLiked()))
+                if(onItemClickListener != null)
                     onItemClickListener.onLikeButtonClick(shareActivity);
             }
         });
@@ -105,6 +105,9 @@ public class ShareActivityAdapter extends BaseAdapter {
         if(shareActivity.getCurrentParentLiked()){
             btnLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.liked2, 0, 0, 0);
             btnLike.setText("LIKED");
+        }else {
+            btnLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.like4, 0, 0, 0);
+            btnLike.setText("LIKE");
         }
 
         return view;

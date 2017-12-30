@@ -144,7 +144,10 @@ public class StudentShareListFragment extends Fragment {
         adapter = new ShareActivityAdapter(getActivity(), shareActivities, new ShareActivityAdapter.OnItemClickListener() {
             @Override
             public void onLikeButtonClick(ShareActivity shareActivity) {
-                shareActivityLikeArttir(shareActivity);
+                if(shareActivity.getCurrentParentLiked())
+                    shareActivityLikeAzalt(shareActivity);
+                else
+                    shareActivityLikeArttir(shareActivity);
             }
 
             @Override
@@ -247,8 +250,10 @@ public class StudentShareListFragment extends Fragment {
     }
 
     private void shareActivityLikeArttir(ShareActivity shareActivity){
-        if(shareActivity.getCurrentParentLiked())
+        if(shareActivity.getCurrentParentLiked()){
+            shareActivityLikeAzalt(shareActivity);
             return;
+        }
 
         ArrayList<String> likedParents = shareActivity.getLikedParents();
         likedParents.add(student.getParentID());
@@ -265,6 +270,33 @@ public class StudentShareListFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d(TAG, "Like arttırma hata: " + e.getMessage());
+            }
+        });
+    }
+
+    private void shareActivityLikeAzalt(ShareActivity shareActivity){
+        ArrayList<String> likedParents = shareActivity.getLikedParents();
+        for(int i = 0; i < likedParents.size(); i++){
+            if(likedParents.get(i).equals(student.getParentID())) {
+                likedParents.remove(i);
+                shareActivity.setCurrentParentLiked(false);
+                break;
+            }
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("likedParents", likedParents);
+        map.put("likes", shareActivity.getLikeNumber() - 1);
+
+        db.collection("ShareActivities").document(shareActivity.getId()).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "Like azaltıldı");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Like azaltma hata: " + e.getMessage());
             }
         });
     }
