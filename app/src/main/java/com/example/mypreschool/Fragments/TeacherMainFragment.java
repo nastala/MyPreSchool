@@ -77,7 +77,8 @@ public class TeacherMainFragment extends Fragment {
                 teacher.setTeacherEmail(documentSnapshot.getString("email"));
                 teacher.setTeacherName(documentSnapshot.getString("name"));
                 teacher.setTeacherPhoneNumber(documentSnapshot.getString("phoneNumber"));
-                teacher.setTeacherClassID("classID");
+                teacher.setTeacherClassID(documentSnapshot.getString("classID"));
+                teacher.setTeacherPhoto(documentSnapshot.getString("sgurl"));
                 btnShareActivity.setClickable(true);
             }
         }).addOnFailureListener(new OnFailureListener() {

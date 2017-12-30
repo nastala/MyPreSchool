@@ -1,6 +1,7 @@
 package com.example.mypreschool.Fragments;
 
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -9,12 +10,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.example.mypreschool.Adapters.StudentAdapter;
 import com.example.mypreschool.Classes.Student;
 import com.example.mypreschool.R;
+import com.example.mypreschool.StudentMainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,6 +59,15 @@ public class SelectStudentScreenFragment extends Fragment {
         pbListStudents = view.findViewById(R.id.pbListStudent);
         Log.d(TAG, mAuth.getUid());
 
+        lvStudents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(getActivity(), StudentMainActivity.class);
+                i.putExtra("student", students.get(position));
+                startActivity(i);
+            }
+        });
+
         bringStudents();
         return view;
     }
@@ -76,26 +88,12 @@ public class SelectStudentScreenFragment extends Fragment {
                     final Student student = new Student();
                     student.setName(documentSnapshot.getString("name"));
                     student.setSgurl(documentSnapshot.getString("sgurl"));
-                    students.add(student);
-                    /*StorageReference filePath = mStorage.child("Photos").child(documentSnapshot.getId());
-                    filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            student.setSgurl(uri);
-                            students.add(student);
+                    student.setClassID(documentSnapshot.getString("classID"));
+                    student.setParentID(documentSnapshot.getString("parentID"));
+                    student.setSchoolID(documentSnapshot.getString("schoolID"));
+                    Log.d(TAG, student.getClassID());
 
-                            StudentAdapter adapter = new StudentAdapter(getActivity(), students);
-                            lvStudents.setAdapter(adapter);
-                            Log.d(TAG, "IMAGE GELDI: " + uri);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG, "IMAGE GELEMEDI: " + e.getMessage());
-                        }
-                    });*/
-                    Log.d(TAG, "Student name: " + student.getName());
-                    Log.d(TAG, "Student sgurl: " + student.getSgurl());
+                    students.add(student);
                 }
                 StudentAdapter adapter = new StudentAdapter(getActivity(), students);
                 lvStudents.setAdapter(adapter);

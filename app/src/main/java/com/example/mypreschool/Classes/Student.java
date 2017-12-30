@@ -1,13 +1,31 @@
 package com.example.mypreschool.Classes;
 
+import java.io.Serializable;
+
 /**
  * Created by Nastala on 12/11/2017.
  */
 
-public class Student {
-    private String name, sgurl, parentID, studentID;
+public class Student implements Serializable{
+    private String name, sgurl, parentID, studentID, classID, schoolID;
 
     public Student() {
+    }
+
+    public String getClassID() {
+        return classID;
+    }
+
+    public void setClassID(String classID) {
+        this.classID = classID;
+    }
+
+    public String getSchoolID() {
+        return schoolID;
+    }
+
+    public void setSchoolID(String schoolID) {
+        this.schoolID = schoolID;
     }
 
     public String getStudentID() {

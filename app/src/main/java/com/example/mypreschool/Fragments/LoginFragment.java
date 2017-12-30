@@ -74,7 +74,7 @@ public class LoginFragment extends Fragment {
     private void authKontrolEt(){
         if(mAuth.getCurrentUser() != null){
             String tip = sharedPref.getTip();
-            if(tip.equals("teache")){
+            if(tip.equals("teacher")){
                 teacherEkraninaGit();
             }
             else

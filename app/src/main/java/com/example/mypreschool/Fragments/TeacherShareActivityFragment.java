@@ -29,6 +29,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,6 +72,8 @@ public class TeacherShareActivityFragment extends Fragment {
         btnShareActivity = view.findViewById(R.id.btnShareActivity);
         pbShareActivity = view.findViewById(R.id.pbShareActivity);
 
+        shareActivity = new ShareActivity();
+
         ivKontrol = false;
 
         ivActivity.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +106,9 @@ public class TeacherShareActivityFragment extends Fragment {
         map.put("details", shareActivity.getActivityDetails());
         map.put("sgurl", shareActivity.getSgurl());
         map.put("likes", 0);
+        map.put("classID", teacher.getTeacherClassID());
+        map.put("tsgurl", teacher.getTeacherPhoto());
+        map.put("likedParents", new ArrayList<String>());
 
         db.collection("ShareActivities").document().set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -166,7 +172,7 @@ public class TeacherShareActivityFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == IMAGE_REQUEST) {
-            if (data.getData() == null)
+            if (data == null)
                 return;
 
             yukleniyorDialogGoster();
@@ -175,7 +181,7 @@ public class TeacherShareActivityFragment extends Fragment {
                     .load(uri)
                     .into(ivActivity);
 
-            StorageReference filePath = mStorage.child("ShareActivities");
+            StorageReference filePath = mStorage.child("ShareActivities/" + uri.getLastPathSegment());
             filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
