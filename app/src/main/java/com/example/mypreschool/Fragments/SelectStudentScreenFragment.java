@@ -91,6 +91,7 @@ public class SelectStudentScreenFragment extends Fragment {
                     student.setClassID(documentSnapshot.getString("classID"));
                     student.setParentID(documentSnapshot.getString("parentID"));
                     student.setSchoolID(documentSnapshot.getString("schoolID"));
+                    student.setStudentID(documentSnapshot.getId());
                     Log.d(TAG, student.getClassID());
 
                     students.add(student);
