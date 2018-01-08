@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,6 +54,8 @@ public class StudentMainFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_student_main, container, false);
 
         db = FirebaseFirestore.getInstance();
+
+        Log.d(TAG, "token: " + FirebaseInstanceId.getInstance().getToken());
 
         btnStatus = view.findViewById(R.id.btnStatus);
         btnStatus.setOnClickListener(new View.OnClickListener() {

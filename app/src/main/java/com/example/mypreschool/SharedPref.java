@@ -16,12 +16,20 @@ public class SharedPref {
 
     private static final String PREF_NAME = "mypreschool";
     private static final String TIP = "tip";
+    private static final String TOKENREFRESH = "tokenrefresh";
 
     public SharedPref(Context context){
         this.context = context;
         sharedPref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = sharedPref.edit();
     }
+
+    public void setTokenRefresh(boolean bo) {
+        editor.putBoolean(TOKENREFRESH, bo);
+        editor.commit();
+    }
+
+    public boolean getTokenRefresh() { return  sharedPref.getBoolean(TOKENREFRESH, false); }
 
     public void setTip(String tip){
         editor.putString(TIP, tip);
