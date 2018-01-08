@@ -47,6 +47,7 @@ public class StudentCalendarFragment extends Fragment {
     private LinearLayout llDetay;
     private ListView lvMenu, lvStat;
     private String dateNow;
+    private Date date, dateCurrent;
 
     public StudentCalendarFragment() {
         // Required empty public constructor
@@ -69,6 +70,20 @@ public class StudentCalendarFragment extends Fragment {
         lvMenu = view.findViewById(R.id.lvMenu);
         lvStat = view.findViewById(R.id.lvStat);
 
+        btnPrev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                birGunOnceyiGetir();
+            }
+        });
+
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                birGunSonrayiGetir();
+            }
+        });
+
         bugunuGetir();
         menuBilgileriniGetir();
 
@@ -78,6 +93,7 @@ public class StudentCalendarFragment extends Fragment {
     private void menuBilgileriniGetir(){
         menu = new ArrayList<>();
         pbFood.setVisibility(View.VISIBLE);
+        buttonlariPasifEt();
 
         db.collection("Schools").document(student.getSchoolID()).collection("Classes").document(student.getClassID()).collection("FoodLists")
                 .document(dateNow).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -85,6 +101,8 @@ public class StudentCalendarFragment extends Fragment {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if(!documentSnapshot.exists()){
                     Toast.makeText(getActivity(), "No information found!", Toast.LENGTH_SHORT).show();
+                    pbFood.setVisibility(View.GONE);
+                    buttonlariAktifEt();
                     return;
                 }
 
@@ -96,8 +114,19 @@ public class StudentCalendarFragment extends Fragment {
             public void onFailure(@NonNull Exception e) {
                 Log.d(TAG, "MENU GETİRME HATA: " + e.getMessage());
                 pbFood.setVisibility(View.GONE);
+                buttonlariAktifEt();
             }
         });
+    }
+
+    private void buttonlariPasifEt(){
+        btnNext.setClickable(false);
+        btnPrev.setClickable(false);
+    }
+
+    private void buttonlariAktifEt(){
+        btnNext.setClickable(true);
+        btnPrev.setClickable(true);
     }
 
     private void statBilgileriniGetir(){
@@ -110,6 +139,8 @@ public class StudentCalendarFragment extends Fragment {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if(!documentSnapshot.exists()){
                     Toast.makeText(getActivity(), "No information found!", Toast.LENGTH_SHORT).show();
+                    pbFood.setVisibility(View.GONE);
+                    buttonlariAktifEt();
                     return;
                 }
 
@@ -122,6 +153,7 @@ public class StudentCalendarFragment extends Fragment {
             public void onFailure(@NonNull Exception e) {
                 Log.d(TAG, "STAT GETİRME HATA: " + e.getMessage());
                 pbFood.setVisibility(View.GONE);
+                buttonlariAktifEt();
             }
         });
     }
@@ -137,12 +169,45 @@ public class StudentCalendarFragment extends Fragment {
         lvMenu.setAdapter(menuAdapter);
         llDetay.setVisibility(View.VISIBLE);
         pbFood.setVisibility(View.GONE);
+        buttonlariAktifEt();
+    }
+
+    private void birGunOnceyiGetir(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_YEAR, -1);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+        date = calendar.getTime();
+        dateNow = dateFormat.format(date);
+        tvDate.setText(dateNow);
+
+        llDetay.setVisibility(View.GONE);
+        btnNext.setVisibility(View.VISIBLE);
+        menuBilgileriniGetir();
+    }
+
+    private void birGunSonrayiGetir(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_YEAR, +1);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+        date = calendar.getTime();
+        dateNow = dateFormat.format(date);
+        tvDate.setText(dateNow);
+
+        if(!date.before(dateCurrent))
+            btnNext.setVisibility(View.GONE);
+        llDetay.setVisibility(View.GONE);
+        menuBilgileriniGetir();
     }
 
     private void bugunuGetir(){
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-        Date now = Calendar.getInstance().getTime();
-        dateNow = dateFormat.format(now);
+        date = Calendar.getInstance().getTime();
+        dateNow = dateFormat.format(date);
+        dateCurrent = date;
         tvDate.setText(dateNow);
     }
 
