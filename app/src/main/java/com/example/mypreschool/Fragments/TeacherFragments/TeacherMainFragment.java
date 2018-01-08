@@ -58,7 +58,7 @@ public class TeacherMainFragment extends Fragment {
         btnFoodList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TeacherFoodListFragment hedef = new TeacherFoodListFragment();
+                TeacherMenuListFragment hedef = new TeacherMenuListFragment();
                 hedef.setTeacher(teacher);
                 ekranaGit(hedef);
             }

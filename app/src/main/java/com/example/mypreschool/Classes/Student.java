@@ -1,6 +1,7 @@
 package com.example.mypreschool.Classes;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by Nastala on 12/11/2017.
@@ -8,9 +9,19 @@ import java.io.Serializable;
 
 public class Student implements Serializable{
     private String name, sgurl, parentID, studentID, classID, schoolID, stat;
+    private ArrayList<String> stats;
     private boolean isStated;
 
     public Student() {
+        stats = new ArrayList<>();
+    }
+
+    public ArrayList<String> getStats() {
+        return stats;
+    }
+
+    public void addtoStats(int position, String stat){
+        stats.add(position, stat);
     }
 
     public String getStat() {
