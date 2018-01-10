@@ -1,7 +1,8 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/acıkmavi"
     android:orientation="vertical"
     tools:context="com.example.mypreschool.Fragments.BottomNavigationFragments.StudentCalendarFragment">
 
@@ -10,7 +11,9 @@
         android:id="@+id/cvStat"
         android:layout_width="385dp"
         android:layout_height="300dp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:layout_marginTop="70dp"
+        android:selectedWeekBackgroundColor="@color/yesil" />
 
     <ProgressBar
         android:layout_width="wrap_content"
@@ -19,4 +22,4 @@
         android:layout_gravity="center"
         android:visibility="gone"/>
 
-</LinearLayout>
+</RelativeLayout>

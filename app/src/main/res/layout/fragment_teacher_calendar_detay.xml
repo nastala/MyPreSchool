@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/acıkmavi"
     android:padding="10dp"
     tools:context="com.example.mypreschool.Fragments.TeacherFragments.TeacherCalendarDetayFragment">
 
@@ -14,12 +15,14 @@
         android:layout_marginBottom="30dp">
 
         <TextView
+            android:id="@+id/tvDate"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Date"
-            android:textSize="30sp"
+            android:layout_marginTop="60dp"
             android:gravity="center"
-            android:id="@+id/tvDate"/>
+            android:text="Date"
+            android:textColor="@color/kirmizi"
+            android:textSize="30sp" />
     </LinearLayout>
 
     <ProgressBar

@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/acıkmavi"
     tools:context="com.example.mypreschool.Fragments.AdminParentFragment">
 
     <LinearLayout
@@ -16,17 +17,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/lvParents"
-            android:layout_weight="9"/>
+            android:layout_weight="15"/>
 
         <TextView
+            android:id="@+id/tvAdminAddParent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Parent"
-            android:id="@+id/tvAdminAddParent"
+            android:layout_gravity="center"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:layout_gravity="center"/>
+            android:text="Add Parent"
+            android:textColor="@color/koyuyesil"
+            android:textSize="18sp" />
     </LinearLayout>
 
     <ProgressBar

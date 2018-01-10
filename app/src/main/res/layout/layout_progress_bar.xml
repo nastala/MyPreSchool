@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/acıkmavi">
+
 
     <ProgressBar
+        android:id="@+id/pbProgress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/pbProgress"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimary"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
         android:text="Fotoğrafınız Yükleniyor..."
-        android:layout_gravity="center"/>
+        android:textColor="@color/koyuyesil"
+        android:textSize="20sp" />
 </LinearLayout>

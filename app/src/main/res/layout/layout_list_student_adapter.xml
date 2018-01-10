@@ -3,19 +3,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/acıkmavi">
+
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/civStudentImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp" />
+        android:layout_centerHorizontal="true" />
 
     <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/civStudentImage"
         android:layout_marginEnd="12dp"
@@ -24,11 +25,12 @@
 
     <TextView
         android:id="@+id/tvStudentName"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/civStudentImage"
+        android:layout_alignBottom="@+id/ivStudentDelete"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:text="Student Name" />
+        android:text="Student Name"
+        android:textColor="@color/koyuyesil"
+        android:textSize="16sp" />
 </RelativeLayout>

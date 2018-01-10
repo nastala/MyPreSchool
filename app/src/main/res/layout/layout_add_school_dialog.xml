@@ -1,31 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="200dp"
-    android:layout_height="wrap_content">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/acıkmavi">
+
 
     <LinearLayout
-        android:layout_width="200dp"
+        android:layout_width="1000dp"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+
         <EditText
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
+            android:id="@+id/etSchoolName"
+            android:layout_width="500dp"
+            android:layout_height="100dp"
             android:hint="School Name"
-            android:id="@+id/etSchoolName"/>
+            android:textColor="@color/koyuyesil"
+            android:textColorHint="@color/koyuyesil" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/btnAddSchool"
-            android:text="Add School"
-            android:layout_gravity="center"/>
-
-        <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@color/yesil"
+            android:text="Add School"
+            android:textColor="@color/koyuyesil" />
+
+        <ProgressBar
             android:id="@+id/pbAddSchool"
-            android:visibility="gone"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
     </LinearLayout>
 </RelativeLayout>

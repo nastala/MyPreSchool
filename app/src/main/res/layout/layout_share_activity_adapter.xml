@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/acıkmavi">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,13 +24,15 @@
             android:layout_marginStart="10dp">
 
             <TextView
+                android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:text="Title"
-                android:id="@+id/tvTitle"
-                android:textColor="@color/colorPrimary"
+                android:textAllCaps="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:layout_marginBottom="5dp"/>
+                android:textColor="?attr/colorError"
+                android:textColorHighlight="@android:color/holo_orange_light" />
 
             <TextView
                 android:layout_width="wrap_content"
