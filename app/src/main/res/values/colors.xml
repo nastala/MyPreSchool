@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="beyaz">#FFFFFF</color>
+    <color name="colorPrimary">#b0e2ff</color>
+    <color name="colorPrimaryDark">#CDC0B0</color>
+    <color name="colorAccent">#FF4500</color>
+    <color name="beyaz">#fbf971</color>
     <color name="siyah">#000000</color>
+    <color name="yesil">#b0e2ff</color>
+    <color name="kirmizi">#ff4500</color> <!-- lazim bir renk oldugunda kodunu bulup buraya ayni sekilde ekle anladımm-->
+    <color name="koyuyesil">#698b22</color>
+    <color name="acıkmavi">#F0F8FF</color>
 </resources>

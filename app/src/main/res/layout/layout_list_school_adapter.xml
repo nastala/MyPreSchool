@@ -2,8 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/acıkmavi"
 
+    >
 
     <TextView
         android:id="@+id/tvSchoolName"
@@ -11,11 +13,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="35dp"
-        android:layout_marginBottom="35dp"
+        android:layout_marginTop="60dp"
         android:text="School Name"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/koyuyesil"
+        android:textSize="20sp" />
+<!-- textcolor, backcolor vs o ekledigin rekleri yapabilirsin -->
     <ImageView
         android:id="@+id/ivSchoolDelete"
         android:layout_width="30dp"

@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/acıkmavi"
     tools:context="com.example.mypreschool.Fragments.TeacherFragments.TeacherShareActivityFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -11,29 +12,38 @@
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/etActivityTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
             android:hint="Activity Title"
-            android:id="@+id/etActivityTitle"/>
+            android:textColor="@color/koyuyesil"
+            android:textColorHint="@color/koyuyesil" />
 
         <EditText
+            android:id="@+id/etActivityDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Activity Details"
-            android:id="@+id/etActivityDetails"/>
+            android:textColor="@color/koyuyesil"
+            android:textColorHint="@color/koyuyesil" />
 
         <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@android:drawable/ic_menu_gallery"
+            android:id="@+id/ivActivity"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_gravity="center"
-            android:id="@+id/ivActivity"/>
+            android:src="@android:drawable/ic_menu_gallery" />
 
         <Button
-            android:layout_width="match_parent"
+            android:id="@+id/btnShareActivity"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="90dp"
+            android:layout_marginTop="30dp"
+            android:background="@color/yesil"
             android:text="SHARE ACTIVITY"
-            android:id="@+id/btnShareActivity"/>
+            android:textColor="@color/koyuyesil" />
     </LinearLayout>
 
     <ProgressBar

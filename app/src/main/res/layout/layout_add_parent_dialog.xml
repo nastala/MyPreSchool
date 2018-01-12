@@ -1,34 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="200dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="390dp"
     android:layout_height="wrap_content"
+    android:background="@color/acıkmavi"
     android:orientation="vertical">
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/etParentName"
-        android:hint="Parent Name"/>
+        android:layout_width="390dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="60dp"
+        android:hint="Parent Name"
+        android:textColor="@color/koyuyesil"
+        android:textColorHint="@color/koyuyesil" />
 
     <EditText
         android:id="@+id/etParentEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:hint="Parent E-Mail"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:textColor="@color/koyuyesil"
+        android:textColorHint="@color/koyuyesil" />
 
     <Button
+        android:id="@+id/btnAddParent"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@color/yesil"
+        android:text="ADD PARENT"
+        android:textColor="@color/koyuyesil" />
+
+    <ProgressBar
+        android:id="@+id/pbAddParent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="ADD PARENT"
-        android:id="@+id/btnAddParent"/>
-
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:id="@+id/pbAddParent"
-        android:layout_gravity="center"/>
+        android:visibility="gone" />
 </LinearLayout>

@@ -2,20 +2,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/acıkmavi"
     tools:context="com.example.mypreschool.Fragments.TeacherFragments.TeacherMainFragment"
     android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
 
     <Button
-        android:layout_width="match_parent"
+        android:id="@+id/btnShareActivity"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="60dp"
+        android:background="@color/yesil"
         android:text="SHARE AN ACTIVITY"
-        android:id="@+id/btnShareActivity"/>
+        android:textColor="@android:color/holo_green_dark" />
 
     <Button
-        android:layout_width="match_parent"
+        android:id="@+id/btnFoodList"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/yesil"
         android:text="STUDENT FOOD LIST"
-        android:id="@+id/btnFoodList"/>
+        android:textColor="@android:color/holo_green_dark" />
 </LinearLayout>

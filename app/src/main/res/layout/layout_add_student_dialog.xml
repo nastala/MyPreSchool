@@ -1,66 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="200dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="375dp"
     android:layout_height="wrap_content"
+    android:background="@color/acıkmavi"
     android:orientation="vertical">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:id="@+id/civStudent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
         android:src="@drawable/defaultprofil"
-        android:id="@+id/civStudent"/>
+        app:civ_fill_color="@android:color/transparent" />
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/etStudentName"
-        android:hint="Student Name"/>
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:hint="Student Name"
+        android:textColor="@android:color/holo_green_dark"
+        android:textColorHighlight="@android:color/holo_green_dark"
+        android:textColorHint="@android:color/holo_green_dark" />
 
     <TextView
+        android:id="@+id/tvSelectSchool"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
         android:text="Select School"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"
-        android:id="@+id/tvSelectSchool"/>
+        android:textColor="@android:color/holo_green_dark" />
 
     <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
         android:id="@+id/spnSchools"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"/>
+        android:backgroundTint="?attr/colorError" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select Class"
-        android:layout_marginTop="5dp"
+        android:id="@+id/tvSelectClass"
+        android:layout_width="88dp"
+        android:layout_height="32dp"
         android:layout_marginStart="5dp"
-        android:id="@+id/tvSelectClass"/>
+        android:layout_marginTop="5dp"
+        android:text="Select Class"
+        android:textColor="@android:color/holo_green_dark" />
 
     <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
         android:id="@+id/spnClasses"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"/>
+        android:backgroundTint="?attr/colorError" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Student"
         android:id="@+id/btnAddStudent"
-        android:layout_gravity="center"/>
-
-    <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:text="Add Student"
+        android:textColor="@android:color/holo_green_dark"
+        android:textColorHighlight="@android:color/holo_green_light"
+        android:textColorHint="@android:color/holo_green_light" />
+
+    <ProgressBar
         android:id="@+id/pbAddStudent"
-        android:visibility="gone"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 </LinearLayout>

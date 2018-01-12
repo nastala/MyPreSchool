@@ -1,80 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
+    android:background="@color/acıkmavi"
     android:orientation="vertical">
+    <!--  -->
 
     <ProgressBar
+        android:id="@+id/pbAddTeacher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:id="@+id/pbAddTeacher"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civTeacher"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_gravity="center"
-        android:id="@+id/civTeacher"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <EditText
+        android:id="@+id/etTeacherName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:hint="Teacher Name"
-        android:id="@+id/etTeacherName"/>
+        android:textColor="@color/koyuyesil"
+        android:textColorHint="@color/koyuyesil" />
 
     <EditText
         android:id="@+id/etTeacherPhoneNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:hint="Teacher Phone Number"
-        android:inputType="phone" />
+        android:inputType="phone"
+        android:textColor="@color/koyuyesil"
+        android:textColorHint="@color/koyuyesil" />
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
         android:id="@+id/etTeacherEmail"
-        android:hint="Teacher E-mail"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Teacher E-mail"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/koyuyesil"
+        android:textColorHint="@color/koyuyesil" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
         android:text="Select School"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"/>
+        android:textColor="@color/koyuyesil" />
 
     <Spinner
+        android:id="@+id/spnSchools"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:id="@+id/spnSchools"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"/>
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
         android:text="Select Class"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"/>
+        android:textColor="@color/koyuyesil" />
 
     <Spinner
+        android:id="@+id/spnClasses"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:id="@+id/spnClasses"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"/>
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp" />
 
     <TextView
+        android:id="@+id/tvAddTeacher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:id="@+id/tvAddTeacher"
+        android:layout_marginTop="20dp"
+        android:background="@color/yesil"
         android:text="Add Teacher"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/koyuyesil" />
 
 </LinearLayout>

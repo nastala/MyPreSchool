@@ -3,29 +3,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.mypreschool.Fragments.AdminFragments.AdminMainFragment"
+    android:background="@color/acıkmavi"
     android:orientation="vertical">
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/btnSchoolAdmin"
-        android:text="MANAGE SCHOOLS"/>
+        android:layout_width="150dp"
+        android:layout_height="55dp"
+        android:layout_marginLeft="120dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="95dp"
+        android:background="@color/yesil"
+        android:text="MANAGE SCHOOLS"
+        android:textColor="@android:color/holo_green_dark"
+        android:textColorHighlight="@android:color/holo_green_dark" />
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/btnTeacherAdmin"
-        android:text="MANAGE TEACHERS"/>
+        android:layout_width="150dp"
+        android:layout_height="55dp"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/yesil"
+        android:text="MANAGE TEACHERS"
+        android:textColor="@android:color/holo_green_dark" />
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/btnParentAdmin"
-        android:text="MANAGE PARENTS"/>
+        android:layout_width="150dp"
+        android:layout_height="55dp"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/yesil"
+        android:text="MANAGE PARENTS"
+        android:textColor="@android:color/holo_green_dark" />
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/btnStudentAdmin"
-        android:text="MANAGE STUDENTS"/>
+        android:layout_width="150dp"
+        android:layout_height="55dp"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/yesil"
+        android:text="MANAGE STUDENTS"
+        android:textColor="@android:color/holo_green_dark" />
 </LinearLayout>
