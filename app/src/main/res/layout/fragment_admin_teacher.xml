@@ -27,6 +27,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="5dp"
             android:text="Add Teacher"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/koyuyesil" />
     </LinearLayout>
 </RelativeLayout>

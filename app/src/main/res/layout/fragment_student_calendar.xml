@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/acıkmavi"
     android:weightSum="10"
     android:padding="10dp"
     tools:context="com.example.mypreschool.Fragments.BottomNavigationFragments.StudentCalendarFragment">
@@ -22,25 +23,29 @@
             android:layout_gravity="center"
             android:weightSum="5"
             android:padding="20dp">
+
             <Button
+                android:id="@+id/btnPrev"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textSize="35sp"
+                android:layout_weight="1"
+                android:background="@color/beyaz"
                 android:text="@string/prev"
-                android:background="@android:color/transparent"
-                android:id="@+id/btnPrev"
-                android:layout_weight="1"/>
+                android:textColor="@color/koyuyesil"
+                android:textSize="35sp" />
 
             <TextView
+                android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textAlignment="center"
-                android:textSize="35dp"
-                android:id="@+id/tvDate"
+                android:layout_weight="3"
+                android:background="@color/yesil"
                 android:text="DATE"
-                android:layout_weight="3"/>
+                android:textAlignment="center"
+                android:textColor="@color/koyuyesil"
+                android:textSize="35dp" />
 
             <Button
                 android:layout_width="0dp"

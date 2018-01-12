@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:weightSum="10"
     android:orientation="vertical"
+    android:background="@color/acıkmavi"
     android:padding="10dp"
     tools:context="com.example.mypreschool.Fragments.TeacherFragments.TeacherMenuStudentListFragment">
 
@@ -15,12 +16,14 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:textSize="25sp"
-            android:id="@+id/tvDate"/>
+            android:layout_centerVertical="true"
+            android:text="Date"
+            android:textColor="@color/koyuyesil"
+            android:textSize="25sp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -30,12 +33,14 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/tvFood"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:textSize="17sp"
-            android:id="@+id/tvFood"/>
+            android:layout_centerVertical="true"
+            android:text="Food"
+            android:textColor="@color/kirmizi"
+            android:textSize="17sp" />
     </RelativeLayout>
 
     <ProgressBar

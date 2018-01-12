@@ -21,13 +21,14 @@
             android:layout_weight="9"/>
 
         <TextView
+            android:id="@+id/tvAddClass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tvAddClass"
             android:layout_gravity="center"
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:text="Add Class"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/koyuyesil" />
     </LinearLayout>
 </RelativeLayout>
