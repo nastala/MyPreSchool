@@ -76,7 +76,6 @@ public class StudentMainActivity extends AppCompatActivity {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.flStudentMain, hedef);
-        fragmentTransaction.addToBackStack(hedef.getTag());
         fragmentTransaction.commit();
     }
 

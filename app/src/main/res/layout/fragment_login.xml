@@ -12,6 +12,7 @@
         android:layout_height="60dp"
         android:layout_marginTop="80dp"
         android:hint="E-mail"
+        android:inputType="textEmailAddress"
         android:textColor="@color/koyuyesil"
         android:textColorHint="@color/koyuyesil" />
 
@@ -24,6 +25,13 @@
         android:inputType="textPassword"
         android:textColorHint="@color/koyuyesil" />
 
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/pbLogin"
+        android:visibility="gone"/>
+
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="90dp"
@@ -34,11 +42,4 @@
         android:text="LOGIN"
         android:textColor="@android:color/holo_blue_dark" />
 
-
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/pbLogin"
-        android:visibility="gone"/>
 </LinearLayout>

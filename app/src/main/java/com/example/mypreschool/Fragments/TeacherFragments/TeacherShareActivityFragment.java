@@ -18,16 +18,25 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.mypreschool.Classes.ShareActivity;
+import com.example.mypreschool.Classes.ShareActivityRequest;
 import com.example.mypreschool.Classes.Teacher;
 import com.example.mypreschool.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,6 +59,7 @@ public class TeacherShareActivityFragment extends Fragment {
     private boolean ivKontrol;
     private ShareActivity shareActivity;
     private StorageReference mStorage;
+    private ArrayList<String> parentSGCMs;
 
 
     public TeacherShareActivityFragment() {
@@ -114,9 +124,7 @@ public class TeacherShareActivityFragment extends Fragment {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(getActivity(), "Activity shared successfully", Toast.LENGTH_SHORT).show();
-                FragmentManager fm = getFragmentManager();
-                fm.popBackStack();
-                pbShareActivity.setVisibility(View.GONE);
+                parentSGCMDoldur();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -126,6 +134,75 @@ public class TeacherShareActivityFragment extends Fragment {
                 pbShareActivity.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void parentSGCMDoldur(){
+        parentSGCMs = new ArrayList<>();
+
+        db.collection("Parents").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                for(DocumentSnapshot documentSnapshot : documentSnapshots){
+                    if(!documentSnapshot.exists())
+                        return;
+
+                    String sgcm = documentSnapshot.getString("sgcm");
+                    if(parentSGCMKontrolEt(sgcm)) {
+                        Log.d("TEACHERSHAREACTIVITY", "token: " + sgcm);
+                        parentSGCMs.add(sgcm);
+                    }
+                }
+
+                for(int i = 0; i < parentSGCMs.size(); i++){
+                    notificationGonder(parentSGCMs.get(i));
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("TEACHERSHAREACTIVITY", "Parent sgcm hata: " + e.getMessage());
+            }
+        });
+    }
+
+    private boolean parentSGCMKontrolEt(String sgcm){
+        if(parentSGCMs == null || parentSGCMs.size() < 1)
+            return true;
+
+        for(String sgcmK : parentSGCMs){
+            if(sgcmK.equals(sgcm))
+                return false;
+        }
+
+        return true;
+    }
+
+    private void notificationGonder(String token){
+        /*String[] tokens = new String[parentSGCMs.size()];
+        tokens = parentSGCMs.toArray(tokens);
+        for(String token : tokens){
+            Log.d("TEACHERSHAREACTIVITY", token);
+        }*/
+
+        Response.Listener<String> listener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("TEACHERSHAREACTIVITY", response);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    Log.d("TEACHERSHAREACTIVITY", response);
+                    FragmentManager fm = getFragmentManager();
+                    fm.popBackStack();
+                    pbShareActivity.setVisibility(View.GONE);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        ShareActivityRequest request = new ShareActivityRequest(token, shareActivity.getActivityTitle(), listener);
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        queue.add(request);
     }
 
     private boolean kontrolEt(){

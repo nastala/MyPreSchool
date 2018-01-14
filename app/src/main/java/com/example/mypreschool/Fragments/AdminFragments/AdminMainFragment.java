@@ -16,7 +16,7 @@ import com.example.mypreschool.R;
  * A simple {@link Fragment} subclass.
  */
 public class AdminMainFragment extends Fragment {
-    private Button btnSchoolAdmin, btnTeacherAdmin, btnParentAdmin, btnStudentAdmin;
+    private Button btnSchoolAdmin, btnTeacherAdmin, btnParentAdmin, btnStudentAdmin, btnAddAnnouncement;
 
     public AdminMainFragment() {
         // Required empty public constructor
@@ -33,6 +33,7 @@ public class AdminMainFragment extends Fragment {
         btnTeacherAdmin = view.findViewById(R.id.btnTeacherAdmin);
         btnParentAdmin = view.findViewById(R.id.btnParentAdmin);
         btnStudentAdmin = view.findViewById(R.id.btnStudentAdmin);
+        btnAddAnnouncement = view.findViewById(R.id.btnAddAnnouncement);
 
         btnParentAdmin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,8 +59,23 @@ public class AdminMainFragment extends Fragment {
                 goTeacherAdminFragment();
             }
         });
+        btnAddAnnouncement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goAdminAnnouncementFragment();
+            }
+        });
 
         return view;
+    }
+
+    private void goAdminAnnouncementFragment(){
+        Fragment hedef = new AdminAddAnnouncementFragment();
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.flMainActivity, hedef);
+        ft.addToBackStack(null);
+        ft.commit();
     }
 
     private void goSchoolAdminFragment(){

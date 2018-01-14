@@ -20,11 +20,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.mypreschool.Classes.Student;
 import com.example.mypreschool.R;
+import com.example.mypreschool.SharedPref;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,12 +37,7 @@ public class StudentMainFragment extends Fragment {
 
     private Button btnStatus;
     private Student student;
-    private Dialog dialog;
-    private ProgressBar pbFood;
-    private String selectedDateString;
-    private TextView tvDate, tvName;
-    private CheckBox cbNone, cbHalf, cbFull;
-    private ScrollView svFood;
+    private SharedPref sharedPref;
     private FirebaseFirestore db;
 
     public StudentMainFragment() {
@@ -53,9 +51,14 @@ public class StudentMainFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_student_main, container, false);
 
+        sharedPref = new SharedPref(getActivity());
         db = FirebaseFirestore.getInstance();
 
-        Log.d(TAG, "token: " + FirebaseInstanceId.getInstance().getToken());
+        if(sharedPref.getTokenRefresh()) {
+            String token = FirebaseInstanceId.getInstance().getToken();
+            Log.d(TAG, "token: " + token);
+            tokeniYenile(token);
+        }
 
         btnStatus = view.findViewById(R.id.btnStatus);
         btnStatus.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +71,26 @@ public class StudentMainFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void tokeniYenile(String token){
+        Log.d(TAG, "Token yenileme cagrildi");
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("sgcm", token);
+
+        db.collection("Parents").document(student.getParentID()).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "Token yenilendi");
+                sharedPref.setTokenRefresh(false);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Token yenileme hata: " + e.getMessage());
+            }
+        });
     }
 
     private void ekraniGetir(Fragment hedef){
