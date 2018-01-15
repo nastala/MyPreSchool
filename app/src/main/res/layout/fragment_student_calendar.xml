@@ -19,10 +19,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
             android:layout_gravity="center"
-            android:weightSum="5"
-            android:padding="20dp">
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:weightSum="5">
 
             <Button
                 android:id="@+id/btnPrev"
@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="@color/beyaz"
+                android:background="@android:color/transparent"
                 android:text="@string/prev"
                 android:textColor="@color/koyuyesil"
                 android:textSize="35sp" />
@@ -41,22 +41,22 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="3"
-                android:background="@color/yesil"
+                android:background="@android:color/transparent"
                 android:text="DATE"
                 android:textAlignment="center"
                 android:textColor="@color/koyuyesil"
                 android:textSize="35dp" />
 
             <Button
+                android:id="@+id/btnNext"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
                 android:text="@string/next"
                 android:textSize="35sp"
-                android:background="@android:color/transparent"
-                android:id="@+id/btnNext"
-                android:visibility="gone"
-                android:layout_weight="1"/>
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 
