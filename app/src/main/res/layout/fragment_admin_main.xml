@@ -12,7 +12,7 @@
         android:layout_height="55dp"
         android:layout_marginLeft="120dp"
         android:layout_marginRight="30dp"
-        android:layout_marginTop="95dp"
+        android:layout_marginTop="70dp"
         android:background="@color/yesil"
         android:text="MANAGE SCHOOLS"
         android:textColor="@android:color/holo_green_dark"
