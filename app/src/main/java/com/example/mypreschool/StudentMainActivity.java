@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.mypreschool.Classes.Student;
+import com.example.mypreschool.Fragments.BottomNavigationFragments.StudentAnnouncementFragment;
 import com.example.mypreschool.Fragments.BottomNavigationFragments.StudentMainFragment;
 import com.example.mypreschool.Fragments.BottomNavigationFragments.StudentShareListFragment;
 import com.example.mypreschool.Fragments.LoginFragment;
@@ -44,7 +45,9 @@ public class StudentMainActivity extends AppCompatActivity {
 
                     return true;
                 case R.id.navigation_notifications:
-
+                    StudentAnnouncementFragment hedef = new StudentAnnouncementFragment();
+                    hedef.setStudent(student);
+                    ekraniGetir(hedef);
                     return true;
             }
             return false;

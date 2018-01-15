@@ -7,11 +7,19 @@ import java.util.Date;
  */
 
 public class Announcement {
-    private String title, details, schoolName;
+    private String title, details, schoolName, id;
     private Date date;
 
     public Date getDate() {
         return date;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setDate(Date date) {
