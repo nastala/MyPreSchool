@@ -204,6 +204,8 @@ public class AdminTeacherFragment extends Fragment {
         dialog.setContentView(R.layout.layout_add_teacher_dialog);
 
         TextView tvAddTeacher = dialog.findViewById(R.id.tvAddTeacher);
+        TextView tvSelectSchool = dialog.findViewById(R.id.tvSelectSchool);
+        TextView tvSelectClass = dialog.findViewById(R.id.tvSelectClass);
         spnClasses = dialog.findViewById(R.id.spnClasses);
         spnSchools = dialog.findViewById(R.id.spnSchools);
         etTeacherName = dialog.findViewById(R.id.etTeacherName);
@@ -212,6 +214,8 @@ public class AdminTeacherFragment extends Fragment {
         civTeacher = dialog.findViewById(R.id.civTeacher);
 
         civTeacher.setVisibility(View.VISIBLE);
+        tvSelectSchool.setVisibility(View.GONE);
+        tvSelectClass.setVisibility(View.GONE);
 
         if(!(teacher.getTeacherPhoto().equals("default"))){
             Glide.with(civTeacher.getContext())
