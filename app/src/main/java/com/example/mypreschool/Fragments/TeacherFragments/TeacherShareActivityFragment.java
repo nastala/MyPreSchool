@@ -199,7 +199,8 @@ public class TeacherShareActivityFragment extends Fragment {
                     JSONObject jsonObject = new JSONObject(response);
                     Log.d("TEACHERSHAREACTIVITY", response);
                     FragmentManager fm = getFragmentManager();
-                    fm.popBackStack();
+                    if(fm != null)
+                        fm.popBackStack();
                     pbShareActivity.setVisibility(View.GONE);
                 } catch (JSONException e) {
                     e.printStackTrace();

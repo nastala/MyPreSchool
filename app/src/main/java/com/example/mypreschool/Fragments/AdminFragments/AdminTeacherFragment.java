@@ -121,7 +121,7 @@ public class AdminTeacherFragment extends Fragment {
                     teacher.setTeacherID(documentSnapshot.getId());
                     teacher.setTeacherSchoolID(documentSnapshot.getString("schoolID"));
                     teacher.setTeacherEmail(documentSnapshot.getString("email"));
-                    teacher.setTeacherPhoto("sgurl");
+                    teacher.setTeacherPhoto(documentSnapshot.getString("sgurl"));
 
                     teachersNames.add(teacher.getTeacherName());
                     teachers.add(teacher);
@@ -262,7 +262,6 @@ public class AdminTeacherFragment extends Fragment {
         etTeacherName = dialog.findViewById(R.id.etTeacherName);
         etTeacherPhoneNumber = dialog.findViewById(R.id.etTeacherPhoneNumber);
         pbAddTeacher = dialog.findViewById(R.id.pbAddTeacher);
-        etTeacherEmail = dialog.findViewById(R.id.etTeacherEmail);
 
         tvAddTeacher.setOnClickListener(new View.OnClickListener() {
             @Override

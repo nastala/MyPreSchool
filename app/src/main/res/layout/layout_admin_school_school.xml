@@ -3,19 +3,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/acıkmavi"
+    android:weightSum="20"
     android:orientation="vertical">
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:id="@+id/lvSchools"
-        android:layout_weight="9"
+        android:layout_weight="19"
         android:layout_marginBottom="10dp"/>
 
     <TextView
         android:id="@+id/tvAdminAddSchool"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
         android:layout_weight="1"

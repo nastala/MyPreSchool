@@ -2,6 +2,7 @@ package com.example.mypreschool.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +10,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.mypreschool.Classes.School;
 import com.example.mypreschool.Classes.Teacher;
 import com.example.mypreschool.R;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Nastala on 12/23/2017.
@@ -57,8 +61,16 @@ public class TeacherAdapter extends BaseAdapter {
         TextView tvTeacherName = view.findViewById(R.id.tvTeacherName);
         ImageView ivTeacherDelete = view.findViewById(R.id.ivTeacherDelete);
         ImageView ivTeacherEdit = view.findViewById(R.id.ivTeacherEdit);
+        CircleImageView civTeacher = view.findViewById(R.id.civTeacher);
 
         final Teacher teacher = teachers.get(position);
+
+        if(!teacher.getTeacherPhoto().equals("default")){
+            Log.d("TEACHERADAPTER", "teacher sgurl: " + teacher.getTeacherPhoto());
+            Glide.with(civTeacher.getContext())
+                    .load(teacher.getTeacherPhoto())
+                    .into(civTeacher);
+        }
 
         tvTeacherName.setText(teacher.getTeacherName());
         ivTeacherDelete.setOnClickListener(new View.OnClickListener() {

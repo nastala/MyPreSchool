@@ -40,16 +40,6 @@
         android:textColor="@color/koyuyesil"
         android:textColorHint="@color/koyuyesil" />
 
-    <EditText
-        android:id="@+id/etTeacherEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Teacher E-mail"
-        android:inputType="textEmailAddress"
-        android:textColor="@color/koyuyesil"
-        android:textColorHint="@color/koyuyesil" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -8,14 +8,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="10">
+        android:weightSum="20">
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="15"
+            android:layout_height="0dp"
+            android:layout_weight="19"
 
             android:id="@+id/lvTeachers"/>
 
@@ -23,10 +23,11 @@
         <TextView
             android:id="@+id/tvAddTeacher"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_marginBottom="5dp"
             android:text="Add Teacher"
+            android:layout_weight="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/koyuyesil" />
     </LinearLayout>
