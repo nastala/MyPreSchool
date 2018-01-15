@@ -1,11 +1,22 @@
 package com.example.mypreschool.Classes;
 
+import java.util.Date;
+
 /**
  * Created by Nastala on 1/14/2018.
  */
 
 public class Announcement {
     private String title, details, schoolName;
+    private Date date;
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
     public String getTitle() {
         return title;

@@ -29,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.mypreschool.Adapters.ShareActivityAdapter;
+import com.example.mypreschool.Classes.Announcement;
 import com.example.mypreschool.Classes.ShareActivity;
 import com.example.mypreschool.Classes.Student;
 import com.example.mypreschool.R;
@@ -49,6 +50,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -122,24 +125,34 @@ public class StudentShareListFragment extends Fragment {
                     shareActivity.setId(documentSnapshot.getId());
                     shareActivity.setLikedParents((ArrayList<String>)documentSnapshot.get("likedParents"));
                     shareActivity = likeKontrolEt(shareActivity);
+                    shareActivity.setDate(documentSnapshot.getDate("date"));
                     shareActivities.add(shareActivity);
                 }
                 if(!lvKontrol) {
                     lvKontrol = true;
                     lvActivitiesDoldur();
                 }
-                else
+                else {
+                    shareActivitiesSirala();
                     adapter.updateShareActivities(shareActivities);
+                }
             }
         });
     }
 
     private void lvActivitiesDoldur(){
+        if(getActivity() == null)
+            return;
+
         if (shareActivities == null)
             return;
 
-        if(shareActivities.size() < 1)
+        if(shareActivities.size() < 1) {
+            pbShareActivity.setVisibility(View.GONE);
             return;
+        }
+
+        shareActivitiesSirala();
 
         adapter = new ShareActivityAdapter(getActivity(), shareActivities, new ShareActivityAdapter.OnItemClickListener() {
             @Override
@@ -163,19 +176,32 @@ public class StudentShareListFragment extends Fragment {
         pbShareActivity.setVisibility(View.GONE);
     }
 
+    private void shareActivitiesSirala(){
+        Collections.sort(shareActivities, new Comparator<ShareActivity>() {
+            @Override
+            public int compare(ShareActivity o1, ShareActivity o2) {
+                return o2.getDate().compareTo(o1.getDate());
+            }
+        });
+    }
+
     private ShareActivity likeKontrolEt(final ShareActivity shareActivity){
         if(shareActivity.getLikedParents() == null) {
+            Log.d(TAG, "Liked array null, setCurrentParentLiked false yapildi");
             shareActivity.setCurrentParentLiked(false);
             return shareActivity;
         }
 
         for(String id : shareActivity.getLikedParents()){
-            if(id.equals(student.getParentID()))
+            if(id.equals(student.getParentID())) {
+                Log.d(TAG, "Parent daha once begenmis, setCurrentParentLiked true yapildi");
                 shareActivity.setCurrentParentLiked(true);
-            else
-                shareActivity.setCurrentParentLiked(false);
+                return shareActivity;
+            }
         }
 
+        Log.d(TAG, "Parent daha once begenmemis, setCurrentParentLiked false yapildi");
+        shareActivity.setCurrentParentLiked(false);
         return shareActivity;
     }
 

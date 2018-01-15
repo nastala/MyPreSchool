@@ -69,9 +69,11 @@ public class ShareActivityAdapter extends BaseAdapter {
 
         final ShareActivity shareActivity = shareActivities.get(position);
 
-        Glide.with(civTeacher.getContext())
-                .load(shareActivity.getTsgurl())
-                .into(civTeacher);
+        if(!shareActivity.getTsgurl().equals("default")) {
+            Glide.with(civTeacher.getContext())
+                    .load(shareActivity.getTsgurl())
+                    .into(civTeacher);
+        }
 
         Glide.with(ivActivity.getContext())
                 .load(shareActivity.getSgurl())

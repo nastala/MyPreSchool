@@ -39,6 +39,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -111,6 +113,7 @@ public class TeacherShareActivityFragment extends Fragment {
     private void shareActivityiEkle(){
         pbShareActivity.setVisibility(View.VISIBLE);
 
+        Date date = Calendar.getInstance().getTime();
         Map<String, Object> map = new HashMap<>();
         map.put("title", shareActivity.getActivityTitle());
         map.put("details", shareActivity.getActivityDetails());
@@ -119,6 +122,7 @@ public class TeacherShareActivityFragment extends Fragment {
         map.put("classID", teacher.getTeacherClassID());
         map.put("tsgurl", teacher.getTeacherPhoto());
         map.put("likedParents", new ArrayList<String>());
+        map.put("date", date);
 
         db.collection("ShareActivities").document().set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -170,6 +174,9 @@ public class TeacherShareActivityFragment extends Fragment {
             return true;
 
         for(String sgcmK : parentSGCMs){
+            if(sgcmK == null)
+                return true;
+
             if(sgcmK.equals(sgcm))
                 return false;
         }

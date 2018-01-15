@@ -1,6 +1,7 @@
 package com.example.mypreschool.Classes;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Nastala on 12/27/2017.
@@ -10,10 +11,19 @@ public class ShareActivity {
     private String activityTitle, activityDetails, activityID, sgurl, tsgurl, id;
     private int likeNumber;
     private boolean isCurrentParentLiked;
+    private Date date;
     private ArrayList<String> likedParents;
 
     public ShareActivity(){
 
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public ArrayList<String> getLikedParents() {

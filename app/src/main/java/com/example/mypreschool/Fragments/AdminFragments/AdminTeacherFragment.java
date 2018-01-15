@@ -478,7 +478,7 @@ public class AdminTeacherFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == IMAGE_REQUEST){
-            if(data.getData() == null)
+            if(data == null)
                 return;
 
             yukleniyorDialogGoster();
