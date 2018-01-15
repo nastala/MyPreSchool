@@ -1,22 +1,26 @@
 package com.example.mypreschool.Fragments.BottomNavigationFragments;
 
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -62,6 +66,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
  */
 public class StudentShareListFragment extends Fragment {
     private final String TAG = "STUDENTSHARELIST";
+    private int EXTERNAL_STORAGE_REQUEST = 1001;
 
     private ListView lvActivities;
     private ProgressBar pbShareActivity;
@@ -72,6 +77,8 @@ public class StudentShareListFragment extends Fragment {
     private Dialog dialog;
     private ShareActivityAdapter adapter;
     private boolean lvKontrol;
+    private Drawable imageDrawable;
+    private String imageName;
 
     public StudentShareListFragment() {
         // Required empty public constructor
@@ -165,7 +172,9 @@ public class StudentShareListFragment extends Fragment {
 
             @Override
             public void onImageVıewClick(Drawable drawable, String name) {
-                ivActivityDialogAc(drawable, name);
+                imageDrawable = drawable;
+                imageName = name;
+                ivActivityDialogAc();
             }
         });
 
@@ -205,7 +214,7 @@ public class StudentShareListFragment extends Fragment {
         return shareActivity;
     }
 
-    private void ivActivityDialogAc(final Drawable drawable, final String name){
+    private void ivActivityDialogAc(){
         dialog = new Dialog(getActivity(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         dialog.setContentView(R.layout.layout_dialog_image_view);
 
@@ -215,23 +224,29 @@ public class StudentShareListFragment extends Fragment {
         btnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.setCancelable(false);
-                drawableKaydet(drawable, name);
+                if((ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, EXTERNAL_STORAGE_REQUEST);
+                    }
+                }
+                else
+                    drawableKaydet();
             }
         });
 
-        ivActivity.setImageDrawable(drawable);
+        ivActivity.setImageDrawable(imageDrawable);
         dialog.show();
     }
 
-    private void drawableKaydet(Drawable drawable, String name){
-        Bitmap bm = ((BitmapDrawable)drawable).getBitmap();
+    private void drawableKaydet(){
+        dialog.setCancelable(false);
+        Bitmap bm = ((BitmapDrawable)imageDrawable).getBitmap();
         File extStorageDirectory = Environment.getExternalStorageDirectory();
-        File folder = new File(extStorageDirectory.getAbsoluteFile(), "Download");
+        File folder = new File(extStorageDirectory.getAbsoluteFile(), "Downloads");
         folder.mkdir();
-        if(!name.contains(".jpg"))
-            name = name + ".jpg";
-        File file = new File(folder.getAbsoluteFile(), name);
+        if(!imageName.contains(".jpg"))
+            imageName = imageName + ".jpg";
+        File file = new File(folder.getAbsoluteFile(), imageName);
         /*if(file.exists())
             return;*/
 
@@ -330,5 +345,19 @@ public class StudentShareListFragment extends Fragment {
     public void setStudent(Student student){
         Log.d(TAG, "Student Name: " + student.getName());
         this.student = student;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == EXTERNAL_STORAGE_REQUEST){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                drawableKaydet();
+            }
+            else {
+                Toast.makeText(this.getActivity(), "In order to download the image, you must grant the permission!", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }
