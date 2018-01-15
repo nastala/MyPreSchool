@@ -207,10 +207,10 @@ public class AdminStudentFragment extends Fragment {
                     parents2.add(name);
                 }
 
-                if(parents.size() > 0) {
+                /*if(parents.size() > 0) {
                     mParent = parents.get(0);
                     listStudents(mParent.getUid());
-                }
+                }*/
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, parents2);
                 spnAdminParent.setAdapter(arrayAdapter);
                 pbAdmin.setVisibility(View.GONE);
@@ -224,7 +224,7 @@ public class AdminStudentFragment extends Fragment {
     }
 
     private void listStudents(final String parentID){
-        students.clear();
+        students = new ArrayList<>();
         lvStudents.setAdapter(null);
         pbAdmin.setVisibility(View.VISIBLE);
         db.collection("Students").whereEqualTo("parentID", parentID).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
