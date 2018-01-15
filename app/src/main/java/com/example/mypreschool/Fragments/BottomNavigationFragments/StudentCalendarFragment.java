@@ -144,8 +144,14 @@ public class StudentCalendarFragment extends Fragment {
                     return;
                 }
 
-                for(int i = 0; i < menu.size(); i++)
-                    stats.add(documentSnapshot.getString(i + ""));
+                for(int i = 0; i < menu.size(); i++) {
+                    Log.d(TAG, menu.get(i) + " " + documentSnapshot.getString(i + ""));
+
+                    if(documentSnapshot.getString(i + "") == null)
+                        stats.add("");
+                    else
+                        stats.add(documentSnapshot.getString(i + ""));
+                }
                 lvleriDoldur();
             }
         }).addOnFailureListener(new OnFailureListener() {
