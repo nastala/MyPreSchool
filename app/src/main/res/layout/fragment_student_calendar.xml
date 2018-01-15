@@ -53,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
+                android:textColor="@color/koyuyesil"
                 android:background="@android:color/transparent"
                 android:text="@string/next"
                 android:textSize="35sp"
