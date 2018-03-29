@@ -129,15 +129,15 @@ public class LoginFragment extends Fragment {
                 sharedPref.setUsername(username);
                 Log.d(TAG, "TIP GELDI " + tip);
 
-                /*if(tip.equals("teacher")){
+                if(tip.equals("teacher")){
                     teacherEkraninaGit();
                 }
                 else {
                     veliOgrenciEkraninaGit();
-                }*/
+                }
 
-                Intent intent = new Intent(getActivity(), ParentChatActivity.class);
-                startActivity(intent);
+                /*Intent intent = new Intent(getActivity(), ParentChatActivity.class);
+                startActivity(intent);*/
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

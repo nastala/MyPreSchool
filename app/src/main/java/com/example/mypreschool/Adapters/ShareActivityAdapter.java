@@ -32,6 +32,7 @@ public class ShareActivityAdapter extends BaseAdapter {
     public interface OnItemClickListener{
         void onLikeButtonClick(ShareActivity shareActivity);
         void onImageVıewClick(Drawable drawable, String name);
+        void onCivTeacherClick();
     }
 
     public ShareActivityAdapter(Activity activity, ArrayList<ShareActivity> shareActivities, ShareActivityAdapter.OnItemClickListener onItemClickListener){
@@ -111,6 +112,14 @@ public class ShareActivityAdapter extends BaseAdapter {
             btnLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.like4, 0, 0, 0);
             btnLike.setText("LIKE");
         }
+
+        civTeacher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(onItemClickListener != null)
+                    onItemClickListener.onCivTeacherClick();
+            }
+        });
 
         return view;
     }

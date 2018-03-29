@@ -3,6 +3,8 @@ package com.example.mypreschool.Fragments.BottomNavigationFragments;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -176,6 +178,11 @@ public class StudentShareListFragment extends Fragment {
                 imageName = name;
                 ivActivityDialogAc();
             }
+
+            @Override
+            public void onCivTeacherClick() {
+                goTeacherProfile();
+            }
         });
 
         if(getActivity() == null)
@@ -183,6 +190,15 @@ public class StudentShareListFragment extends Fragment {
 
         lvActivities.setAdapter(adapter);
         pbShareActivity.setVisibility(View.GONE);
+    }
+
+    private void goTeacherProfile() {
+        TeacherProfileFragment hedef = new TeacherProfileFragment();
+        hedef.setStudent(student);
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.addToBackStack(null);
+        ft.replace(R.id.flStudentMain, hedef).commit();
     }
 
     private void shareActivitiesSirala(){
