@@ -17,6 +17,7 @@ public class SharedPref {
     private static final String PREF_NAME = "mypreschool";
     private static final String TIP = "tip";
     private static final String TOKENREFRESH = "tokenrefresh";
+    private static final String USERNAME = "username";
 
     public SharedPref(Context context){
         this.context = context;
@@ -37,4 +38,11 @@ public class SharedPref {
     }
 
     public String getTip(){ return  sharedPref.getString(TIP, "yok"); }
+
+    public void setUsername(String username){
+        editor.putString(USERNAME, username);
+        editor.commit();
+    }
+
+    public String getUsername(){ return sharedPref.getString(USERNAME, "username"); }
 }

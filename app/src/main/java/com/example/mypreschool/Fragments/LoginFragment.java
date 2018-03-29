@@ -3,6 +3,7 @@ package com.example.mypreschool.Fragments;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.widget.ProgressBar;
 
 import com.example.mypreschool.Fragments.AdminFragments.AdminMainFragment;
 import com.example.mypreschool.Fragments.TeacherFragments.TeacherMainFragment;
+import com.example.mypreschool.ParentChatActivity;
 import com.example.mypreschool.R;
 import com.example.mypreschool.SharedPref;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -121,16 +123,21 @@ public class LoginFragment extends Fragment {
                 }
 
                 String tip = documentSnapshot.getString("type");
+                String username = documentSnapshot.getString("userName");
 
-                if(tip.equals("teacher")){
+                sharedPref.setTip(tip);
+                sharedPref.setUsername(username);
+                Log.d(TAG, "TIP GELDI " + tip);
+
+                /*if(tip.equals("teacher")){
                     teacherEkraninaGit();
                 }
                 else {
                     veliOgrenciEkraninaGit();
-                }
+                }*/
 
-                sharedPref.setTip(tip);
-                Log.d(TAG, "TIP GELDI " + tip);
+                Intent intent = new Intent(getActivity(), ParentChatActivity.class);
+                startActivity(intent);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
