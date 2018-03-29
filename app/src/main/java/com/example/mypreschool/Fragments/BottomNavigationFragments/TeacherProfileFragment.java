@@ -1,6 +1,7 @@
 package com.example.mypreschool.Fragments.BottomNavigationFragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,6 +18,7 @@ import com.example.mypreschool.Adapters.TeacherContactAdapter;
 import com.example.mypreschool.Classes.Student;
 import com.example.mypreschool.Classes.Teacher;
 import com.example.mypreschool.Classes.TeacherContact;
+import com.example.mypreschool.ParentChatActivity;
 import com.example.mypreschool.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -57,6 +60,23 @@ public class TeacherProfileFragment extends Fragment {
         civTeacher = view.findViewById(R.id.civTeacher);
         tvTeacherName = view.findViewById(R.id.tvTeacherName);
         lvContact = view.findViewById(R.id.lvContact);
+
+        lvContact.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i){
+                    case 0:
+                        Log.d(TAG, "Call tıklandı");
+                        break;
+                    case 1:
+                        Log.d(TAG, "Chat tıklandı");
+                        Intent intent = new Intent(getActivity(), ParentChatActivity.class);
+                        intent.putExtra("user1", student.getParentID());
+                        intent.putExtra("user2", teacher.getTeacherID());
+                        startActivity(intent);
+                }
+            }
+        });
 
         bringTeacherDetails();
 

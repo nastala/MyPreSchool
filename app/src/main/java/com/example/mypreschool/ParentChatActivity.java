@@ -45,11 +45,21 @@ public class ParentChatActivity extends AppCompatActivity {
     private Button btnSend;
     private EditText etMessage;
     private SharedPref sharedPref;
+    private String user1, user2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parent_chat);
+
+        Intent intent = getIntent();
+        if(intent.getExtras() == null){
+            this.finish();
+            return;
+        }
+
+        user1 = intent.getExtras().getString("user1");
+        user2 = intent.getExtras().getString("user2");
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -81,7 +91,7 @@ public class ParentChatActivity extends AppCompatActivity {
             }
         };
 
-        DatabaseReference messageRef = databaseReference.child("messages");
+        DatabaseReference messageRef = databaseReference.child(user1).child(user2);
         FirebaseRecyclerOptions<ChatMessage> options =  new FirebaseRecyclerOptions.Builder<ChatMessage>()
                 .setQuery(messageRef, parser)
                 .build();
@@ -134,7 +144,8 @@ public class ParentChatActivity extends AppCompatActivity {
                 if(check()){
                     Date currentDate = Calendar.getInstance().getTime();
                     ChatMessage chatMessage = new ChatMessage(sharedPref.getUsername(), firebaseAuth.getUid(), etMessage.getText().toString(), currentDate);
-                    databaseReference.child("messages").push().setValue(chatMessage);
+                    databaseReference.child(user1).child(user2).push().setValue(chatMessage);
+                    databaseReference.child(user2).child(user1).push().setValue(chatMessage);
                     etMessage.setText("");
                 }
             }
