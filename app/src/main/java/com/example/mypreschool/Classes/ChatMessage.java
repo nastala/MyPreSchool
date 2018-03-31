@@ -8,13 +8,13 @@ import java.util.Date;
 
 public class ChatMessage {
     private String username, uid, message, id;
-    private Date date;
+    private long timestamp;
 
-    public ChatMessage(String username, String uid, String message, Date date) {
+    public ChatMessage(String username, String uid, String message, long timestamp) {
         this.username = username;
         this.uid = uid;
         this.message = message;
-        this.date = date;
+        this.timestamp = timestamp;
     }
 
     public ChatMessage() {
@@ -52,11 +52,11 @@ public class ChatMessage {
         this.message = message;
     }
 
-    public Date getDate() {
-        return date;
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }

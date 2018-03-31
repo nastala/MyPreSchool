@@ -35,7 +35,7 @@ public class ChatRVAdapter extends RecyclerView.Adapter<ChatRVViewHolder> {
     public void onBindViewHolder(ChatRVViewHolder holder, int position) {
         ChatMessage message = messages.get(position);
 
-        holder.setTvDate(message.getDate());
+        holder.setTvDate(message.getTimestamp());
         holder.setTvMessage(message.getMessage());
         holder.setTvUsername(message.getUsername());
     }

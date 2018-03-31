@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import com.example.mypreschool.Classes.ChatUsers;
 import com.example.mypreschool.Fragments.AdminFragments.AdminMainFragment;
 import com.example.mypreschool.Fragments.TeacherFragments.TeacherMainFragment;
 import com.example.mypreschool.ParentChatActivity;
@@ -25,8 +26,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,6 +45,7 @@ public class LoginFragment extends Fragment {
     private ProgressBar pbLogin;
     private FirebaseFirestore db;
     private SharedPref sharedPref;
+    private DatabaseReference databaseReference;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -53,6 +59,7 @@ public class LoginFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         db = FirebaseFirestore.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         sharedPref = new SharedPref(getActivity().getApplicationContext());
 
         mAuth = FirebaseAuth.getInstance();
@@ -76,8 +83,9 @@ public class LoginFragment extends Fragment {
     }
 
     private void authKontrolEt(){
-        if(mAuth.getCurrentUser() != null){
+        if(mAuth.getUid() != null && mAuth.getCurrentUser() != null){
             String tip = sharedPref.getTip();
+            databaseReference.child("users").child(mAuth.getUid()).setValue(new ChatUsers(sharedPref.getUsername(), Calendar.getInstance().getTimeInMillis()));
             if(tip.equals("teacher")){
                 teacherEkraninaGit();
             }
@@ -130,15 +138,14 @@ public class LoginFragment extends Fragment {
                 sharedPref.setUsername(username);
                 Log.d(TAG, "TIP GELDI " + tip);
 
+                databaseReference.child("users").child(mAuth.getUid()).setValue(new ChatUsers(sharedPref.getUsername(), Calendar.getInstance().getTimeInMillis()));
+
                 if(tip.equals("teacher")){
                     teacherEkraninaGit();
                 }
                 else {
                     veliOgrenciEkraninaGit();
                 }
-
-                /*Intent intent = new Intent(getActivity(), ParentChatActivity.class);
-                startActivity(intent);*/
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

@@ -37,7 +37,8 @@ public class ChatRVViewHolder extends RecyclerView.ViewHolder {
         tvMessage.setText(message);
     }
 
-    public void setTvDate(Date date){
+    public void setTvDate(long timestamp){
+        Date date = new Date(timestamp);
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
         tvDate.setText(dateFormat.format(date));
     }

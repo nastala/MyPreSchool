@@ -12,10 +12,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import com.example.mypreschool.Classes.ChatMessage;
+import com.example.mypreschool.Classes.ChatUsers;
+import com.example.mypreschool.Classes.Chats;
 import com.example.mypreschool.ViewHolders.ChatRVViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -23,6 +26,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ParentChatActivity extends AppCompatActivity {
     private final String TAG = "PARENTCHATACTIVITY";
@@ -37,7 +42,7 @@ public class ParentChatActivity extends AppCompatActivity {
     private Button btnSend;
     private EditText etMessage;
     private SharedPref sharedPref;
-    private String user1, user2, user2Name;
+    private String key, user2Name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +55,7 @@ public class ParentChatActivity extends AppCompatActivity {
             return;
         }
 
-        user1 = intent.getExtras().getString("user1");
-        user2 = intent.getExtras().getString("user2");
-        user2Name = intent.getExtras().getString("user2Name");
+        key = intent.getExtras().getString("key");
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -84,7 +87,7 @@ public class ParentChatActivity extends AppCompatActivity {
             }
         };
 
-        DatabaseReference messageRef = databaseReference.child(user1).child(user2);
+        DatabaseReference messageRef = databaseReference.child("messages").child(key);
         FirebaseRecyclerOptions<ChatMessage> options =  new FirebaseRecyclerOptions.Builder<ChatMessage>()
                 .setQuery(messageRef, parser)
                 .build();
@@ -100,7 +103,7 @@ public class ParentChatActivity extends AppCompatActivity {
                 if(model.getUid().equals(firebaseUser.getUid()))
                     holder.setRlChatGravityEnd();
 
-                holder.setTvDate(model.getDate());
+                holder.setTvDate(model.getTimestamp());
                 holder.setTvUsername(model.getUsername());
                 holder.setTvMessage(model.getMessage());
             }
@@ -135,10 +138,19 @@ public class ParentChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(check()){
-                    Date currentDate = Calendar.getInstance().getTime();
-                    ChatMessage chatMessage = new ChatMessage(sharedPref.getUsername(), firebaseAuth.getUid(), etMessage.getText().toString(), currentDate);
-                    databaseReference.child(user1).child(user2).push().setValue(chatMessage);
-                    databaseReference.child(user2).child(user1).push().setValue(chatMessage);
+                    String message = etMessage.getText().toString();
+                    long timestamp = Calendar.getInstance().getTimeInMillis();
+                    ChatMessage chatMessage = new ChatMessage(sharedPref.getUsername(), firebaseAuth.getUid(), message, timestamp);
+                    databaseReference.child("messages").child(key).push().setValue(chatMessage);
+                    if(sharedPref.getTip().equals("parent")){
+                        databaseReference.child("chats").child(key).setValue(new Chats(sharedPref.getUsername(), message, timestamp));
+                    }
+                    else {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("message", message);
+                        map.put("timestamp", timestamp);
+                        databaseReference.child("chats").child(key).updateChildren(map);
+                    }
                     etMessage.setText("");
                 }
             }

@@ -20,13 +20,25 @@ import com.example.mypreschool.Classes.Teacher;
 import com.example.mypreschool.Classes.TeacherContact;
 import com.example.mypreschool.ParentChatActivity;
 import com.example.mypreschool.R;
+import com.example.mypreschool.SharedPref;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -40,9 +52,12 @@ public class TeacherProfileFragment extends Fragment {
     private Student student;
     private Teacher teacher;
     private FirebaseFirestore db;
+    private FirebaseDatabase database;
     private CircleImageView civTeacher;
     private TextView tvTeacherName;
     private ListView lvContact;
+    private FirebaseAuth mAuth;
+    private boolean memberCheck;
 
     public TeacherProfileFragment() {
         // Required empty public constructor
@@ -55,7 +70,9 @@ public class TeacherProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_teacher_profile, container, false);
 
+        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        database = FirebaseDatabase.getInstance();
 
         civTeacher = view.findViewById(R.id.civTeacher);
         tvTeacherName = view.findViewById(R.id.tvTeacherName);
@@ -70,11 +87,7 @@ public class TeacherProfileFragment extends Fragment {
                         break;
                     case 1:
                         Log.d(TAG, "Chat tıklandı");
-                        Intent intent = new Intent(getActivity(), ParentChatActivity.class);
-                        intent.putExtra("user1", student.getParentID());
-                        intent.putExtra("user2", teacher.getTeacherID());
-                        intent.putExtra("user2Name", teacher.getTeacherName());
-                        startActivity(intent);
+                        checkMembers();
                 }
             }
         });
@@ -82,6 +95,67 @@ public class TeacherProfileFragment extends Fragment {
         bringTeacherDetails();
 
         return view;
+    }
+
+    private void checkMembers() {
+        database.getReference().child("members").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.exists()) {
+                    pushMembers();
+                    return;
+                }
+
+                Iterable<DataSnapshot> dataSnapshots = dataSnapshot.getChildren();
+
+                boolean check = false;
+                String key = null;
+
+                while (dataSnapshots.iterator().hasNext()){
+                    DataSnapshot dataSnapshot1 = dataSnapshots.iterator().next();
+
+                    if(dataSnapshot1.getValue() == null) {
+                        Log.d(TAG, "DataSnapshot1 null");
+                        return;
+                    }
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(dataSnapshot1.getValue().toString());
+                        if(jsonObject.getBoolean(mAuth.getUid()) && jsonObject.getBoolean(teacher.getTeacherID())){
+                            Log.d(TAG, "Username, TeacherName eşit");
+                            key = dataSnapshot1.getKey();
+                            check = true;
+                            break;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if(!check)
+                    pushMembers();
+                else {
+                    Intent intent = new Intent(getActivity(), ParentChatActivity.class);
+                    intent.putExtra("key", key);
+                    intent.putExtra("user2Name", teacher.getTeacherName());
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void pushMembers(){
+        Map<String, Boolean> map = new HashMap<>();
+        map.put(mAuth.getUid(), true);
+        map.put(teacher.getTeacherID(), true);
+        database.getReference().child("members").push().setValue(map);
+
+        checkMembers();
     }
 
     private void bringTeacherDetails() {
