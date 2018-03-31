@@ -100,11 +100,14 @@ public class ParentChatActivity extends AppCompatActivity {
                     return;
                 }
 
-                if(model.getUid().equals(firebaseUser.getUid()))
+                if(model.getUid().equals(firebaseUser.getUid())) {
                     holder.setRlChatGravityEnd();
+                    holder.setTvUsername("Sen");
+                }
+                else
+                    holder.setTvUsername(model.getUsername());
 
                 holder.setTvDate(model.getTimestamp());
-                holder.setTvUsername(model.getUsername());
                 holder.setTvMessage(model.getMessage());
             }
 
@@ -147,7 +150,7 @@ public class ParentChatActivity extends AppCompatActivity {
                     }
                     else {
                         Map<String, Object> map = new HashMap<>();
-                        map.put("message", message);
+                        map.put("lastMessage", message);
                         map.put("timestamp", timestamp);
                         databaseReference.child("chats").child(key).updateChildren(map);
                     }

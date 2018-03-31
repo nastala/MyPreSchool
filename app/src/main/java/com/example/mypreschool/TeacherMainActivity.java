@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.mypreschool.Classes.Teacher;
+import com.example.mypreschool.Fragments.TeacherFragments.TeacherChatMainFragment;
 import com.example.mypreschool.Fragments.TeacherFragments.TeacherMainFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -51,7 +52,7 @@ public class TeacherMainActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.navigation_chat:
-
+                    goScreen(new TeacherChatMainFragment());
                     return true;
             }
             return false;

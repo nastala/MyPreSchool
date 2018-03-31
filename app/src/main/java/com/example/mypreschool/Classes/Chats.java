@@ -10,6 +10,9 @@ public class Chats {
         this.timestamp = timestamp;
     }
 
+    public Chats() {
+    }
+
     public String getTitle() {
         return title;
     }
