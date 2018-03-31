@@ -20,6 +20,7 @@ import com.example.mypreschool.Fragments.TeacherFragments.TeacherMainFragment;
 import com.example.mypreschool.ParentChatActivity;
 import com.example.mypreschool.R;
 import com.example.mypreschool.SharedPref;
+import com.example.mypreschool.TeacherMainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
@@ -149,10 +150,13 @@ public class LoginFragment extends Fragment {
     }
 
     private void teacherEkraninaGit(){
-        FragmentManager fm = getFragmentManager();
+        Intent intent = new Intent(getActivity(), TeacherMainActivity.class);
+        startActivity(intent);
+
+        /*FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.flMainActivity, new TeacherMainFragment());
-        fragmentTransaction.commit();
+        fragmentTransaction.commit();*/
     }
 
     private void veliOgrenciEkraninaGit(){

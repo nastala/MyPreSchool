@@ -5,16 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-
-import com.example.mypreschool.Adapters.ChatRVAdapter;
 import com.example.mypreschool.Classes.ChatMessage;
 import com.example.mypreschool.ViewHolders.ChatRVViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -25,8 +21,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -37,15 +31,13 @@ public class ParentChatActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private String username;
-    private ArrayList<ChatMessage> messages;
     private DatabaseReference databaseReference;
-    private ChatRVAdapter adapter;
     private FirebaseRecyclerAdapter<ChatMessage, ChatRVViewHolder> firebaseRecyclerAdapter;
     private LinearLayoutManager linearLayoutManager;
     private Button btnSend;
     private EditText etMessage;
     private SharedPref sharedPref;
-    private String user1, user2;
+    private String user1, user2, user2Name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +52,7 @@ public class ParentChatActivity extends AppCompatActivity {
 
         user1 = intent.getExtras().getString("user1");
         user2 = intent.getExtras().getString("user2");
+        user2Name = intent.getExtras().getString("user2Name");
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();

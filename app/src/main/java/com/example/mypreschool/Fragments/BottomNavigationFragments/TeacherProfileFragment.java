@@ -73,6 +73,7 @@ public class TeacherProfileFragment extends Fragment {
                         Intent intent = new Intent(getActivity(), ParentChatActivity.class);
                         intent.putExtra("user1", student.getParentID());
                         intent.putExtra("user2", teacher.getTeacherID());
+                        intent.putExtra("user2Name", teacher.getTeacherName());
                         startActivity(intent);
                 }
             }

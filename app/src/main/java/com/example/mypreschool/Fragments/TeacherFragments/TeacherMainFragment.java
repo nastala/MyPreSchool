@@ -64,53 +64,16 @@ public class TeacherMainFragment extends Fragment {
             }
         });
 
-        butonlariPasifEt();
-        teacherDetaylariGetir();
-
         return view;
-    }
-
-    private void butonlariAktifEt(){
-        btnShareActivity.setClickable(true);
-        btnFoodList.setClickable(true);
-    }
-
-    private void butonlariPasifEt(){
-        btnShareActivity.setClickable(false);
-        btnFoodList.setClickable(false);
     }
 
     private void ekranaGit(Fragment hedef){
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.replace(R.id.flMainActivity, hedef);
+        fragmentTransaction.replace(R.id.flTeacherMain, hedef);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
-    private void teacherDetaylariGetir(){
-        teacher = new Teacher();
-
-        db.collection("Teachers").document(mAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(!documentSnapshot.exists())
-                    return;
-
-                teacher.setTeacherSchoolID(documentSnapshot.getString("schoolID"));
-                teacher.setTeacherEmail(documentSnapshot.getString("email"));
-                teacher.setTeacherName(documentSnapshot.getString("name"));
-                teacher.setTeacherPhoneNumber(documentSnapshot.getString("phoneNumber"));
-                teacher.setTeacherClassID(documentSnapshot.getString("classID"));
-                teacher.setTeacherPhoto(documentSnapshot.getString("sgurl"));
-                butonlariAktifEt();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("TEACHERMAIN", "TEACHER GETIRME HATA: " + e.getMessage());
-            }
-        });
-    }
-
+    public void setTeacher(Teacher teacher){ this.teacher = teacher; }
 }

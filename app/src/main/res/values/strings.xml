@@ -10,4 +10,8 @@
     <string name="title_announcements">Announcements</string>
     <string name="prev">\u003c</string>
     <string name="next">\u003e</string>
+    <string name="title_activity_teacher_main">TeacherMainActivity</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="chat">Chat</string>
 </resources>
