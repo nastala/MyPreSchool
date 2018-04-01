@@ -143,7 +143,7 @@ public class TeacherShareActivityFragment extends Fragment {
     private void parentSGCMDoldur(){
         parentSGCMs = new ArrayList<>();
 
-        db.collection("Parents").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        db.collection("Users").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
                 for(DocumentSnapshot documentSnapshot : documentSnapshots){

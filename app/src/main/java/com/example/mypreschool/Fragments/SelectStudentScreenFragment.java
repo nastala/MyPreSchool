@@ -16,7 +16,9 @@ import android.widget.ProgressBar;
 
 import com.example.mypreschool.Adapters.StudentAdapter;
 import com.example.mypreschool.Classes.Student;
+import com.example.mypreschool.MainActivity;
 import com.example.mypreschool.R;
+import com.example.mypreschool.SharedPref;
 import com.example.mypreschool.StudentMainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,10 +26,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SelectStudentScreenFragment extends Fragment {
     private static final String TAG = "SELECTSTUDENTSCREEN";
@@ -38,6 +42,7 @@ public class SelectStudentScreenFragment extends Fragment {
     private ListView lvStudents;
     private ProgressBar pbListStudents;
     private ArrayList<Student> students;
+    private SharedPref sharedPref;
 
     public SelectStudentScreenFragment() {
         // Required empty public constructor
@@ -50,10 +55,18 @@ public class SelectStudentScreenFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_select_student_screen, container, false);
 
+        sharedPref = new SharedPref(getActivity());
+
         students = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         mStorage = FirebaseStorage.getInstance().getReference();
+
+        if(sharedPref.getTokenRefresh()) {
+            String token = FirebaseInstanceId.getInstance().getToken();
+            Log.d(TAG, "token: " + token);
+            tokeniYenile(token);
+        }
 
         lvStudents = view.findViewById(R.id.lvStudents);
         pbListStudents = view.findViewById(R.id.pbListStudent);
@@ -70,6 +83,33 @@ public class SelectStudentScreenFragment extends Fragment {
 
         bringStudents();
         return view;
+    }
+
+    private void tokeniYenile(String token) {
+        Log.d(TAG, "Token yenileme cagrildi");
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("sgcm", token);
+
+        if(mAuth.getUid() == null){
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            startActivity(intent);
+
+            return;
+        }
+
+        db.collection("Users").document(mAuth.getUid()).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "Token yenilendi");
+                sharedPref.setTokenRefresh(false);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Token yenileme hata: " + e.getMessage());
+            }
+        });
     }
 
     private void bringStudents(){
