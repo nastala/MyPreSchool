@@ -1,21 +1,11 @@
 package com.example.mypreschool.ViewHolders;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.example.mypreschool.R;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-/**
- * Created by sezgi on 3/29/2018.
- */
 
 public class ChatRVViewHolder extends RecyclerView.ViewHolder {
     private TextView tvMessage, tvDate, tvUsername;
@@ -37,10 +27,8 @@ public class ChatRVViewHolder extends RecyclerView.ViewHolder {
         tvMessage.setText(message);
     }
 
-    public void setTvDate(long timestamp){
-        Date date = new Date(timestamp);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        tvDate.setText(dateFormat.format(date));
+    public void setTvDate(String date){
+        tvDate.setText(date);
     }
 
     public void setTvUsername(String username){

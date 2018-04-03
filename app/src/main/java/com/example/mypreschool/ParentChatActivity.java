@@ -114,12 +114,12 @@ public class ParentChatActivity extends AppCompatActivity {
 
                 if(model.getUid().equals(firebaseUser.getUid())) {
                     holder.setRlChatGravityEnd();
-                    holder.setTvUsername("Sen");
+                    holder.setTvUsername("You");
                 }
                 else
                     holder.setTvUsername(model.getUsername());
 
-                holder.setTvDate(model.getTimestamp());
+                holder.setTvDate(model.getZamanfarki());
                 holder.setTvMessage(model.getMessage());
             }
 

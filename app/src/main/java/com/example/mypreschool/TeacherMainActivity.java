@@ -54,7 +54,9 @@ public class TeacherMainActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.navigation_chat:
-                    goScreen(new TeacherChatMainFragment());
+                    TeacherChatMainFragment fragment = new TeacherChatMainFragment();
+                    fragment.setTeacher(teacher);
+                    goScreen(fragment);
                     return true;
             }
             return false;

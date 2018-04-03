@@ -1,44 +1,74 @@
 package com.example.mypreschool.Fragments.TeacherFragments;
 
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import com.example.mypreschool.Adapters.ChatPreviewAdapter;
+import com.example.mypreschool.Adapters.ParentListAdapter;
 import com.example.mypreschool.Classes.ChatPreview;
 import com.example.mypreschool.Classes.Chats;
+import com.example.mypreschool.Classes.Parent;
+import com.example.mypreschool.Classes.Teacher;
 import com.example.mypreschool.ParentChatActivity;
 import com.example.mypreschool.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TeacherChatMainFragment extends Fragment {
     private final String TAG = "TEACHERCHATMAINFRAGMENT";
 
     private ChatPreviewAdapter adapter;
+    private ParentListAdapter parentListAdapter;
     private ArrayList<ChatPreview> chats;
     private ArrayList<String> chatIds;
     private ListView lvChats;
-    private ProgressBar pbChat;
+    private ProgressBar pbChat, pbParentList;
     private DatabaseReference database;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private FloatingActionButton fabMessage;
+    private Dialog parentListDialog;
+    private Teacher teacher;
+    private ArrayList<Parent> parents;
+    private ListView lvParentList;
+    private LinearLayout llParentList;
+    private EditText etChatTitle;
+    private int count;
+
 
     public TeacherChatMainFragment() {
     }
@@ -51,20 +81,199 @@ public class TeacherChatMainFragment extends Fragment {
 
         database = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
+        fabMessage = view.findViewById(R.id.fabMessage);
         lvChats = view.findViewById(R.id.lvChats);
         pbChat = view.findViewById(R.id.pbChat);
 
         lvChats.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getActivity(), ParentChatActivity.class);
-                intent.putExtra("key", chats.get(i).getKey());
-                startActivity(intent);
+                goChatActivity(chats.get(i).getKey());
+            }
+        });
+
+        fabMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showParentListDialog();
             }
         });
 
         return view;
+    }
+
+    private void goChatActivity(String key){
+        Intent intent = new Intent(getActivity(), ParentChatActivity.class);
+        intent.putExtra("key", key);
+        startActivity(intent);
+    }
+
+    private void showParentListDialog() {
+        parents = new ArrayList<>();
+        parentListDialog = new Dialog(getActivity());
+        parentListDialog.setContentView(R.layout.dialog_parent_list);
+
+        pbParentList = parentListDialog.findViewById(R.id.pbParentList);
+        lvParentList = parentListDialog.findViewById(R.id.lvParentList);
+        llParentList = parentListDialog.findViewById(R.id.llParentList);
+        Button btnCreate = parentListDialog.findViewById(R.id.btnCreate);
+        etChatTitle = parentListDialog.findViewById(R.id.etChatTitle);
+
+        pbParentList.setVisibility(View.VISIBLE);
+
+        db.collection("Students").whereEqualTo("classID", teacher.getTeacherClassID()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                for(DocumentSnapshot documentSnapshot : documentSnapshots){
+                    if(!documentSnapshot.exists()){
+                        Log.d(TAG, "Parent bulunamadı");
+                        return;
+                    }
+
+                    Parent parent = new Parent();
+                    parent.setUid(documentSnapshot.getString("parentID"));
+                    checkParents(parent);
+                }
+
+                bringParentNames();
+            }
+        });
+
+        btnCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createMembersOfNewChat();
+            }
+        });
+
+        parentListDialog.show();
+    }
+
+    private void createMembersOfNewChat() {
+        String title = etChatTitle.getText().toString();
+
+        if(title.isEmpty()){
+            etChatTitle.setError("Title can not be empty!");
+            return;
+        }
+
+        ArrayList<Parent> checkedParents = parentListAdapter.getCheckedParents();
+
+        if(checkedParents == null || checkedParents.size() < 1){
+            Log.d(TAG, "checked parents null or size < 1");
+            parentListDialog.dismiss();
+            return;
+        }
+
+        Map<String, Object> members = new HashMap<>();
+        Map<String, Object> chats = new HashMap<>();
+
+        for(Parent parent : checkedParents){
+            members.put(parent.getUid(), true);
+        }
+        members.put(mAuth.getUid(), true);
+
+        String key = database.child("members").push().getKey();
+        database.child("members").child(key).setValue(members);
+
+        chats.put("lastMessage", "");
+        chats.put("timestamp", Calendar.getInstance().getTimeInMillis());
+        chats.put("title", title);
+
+        database.child("chats").child(key).setValue(chats);
+
+        parentListDialog.dismiss();
+        goChatActivity(key);
+    }
+
+    private void bringParentNames(){
+        count = 0;
+        Log.d(TAG, "bringParentNames()");
+
+        if(getActivity() == null)
+            return;
+
+        if(parents.size() < 1) {
+            Log.d(TAG, "Parent size < 1");
+            return;
+        }
+
+        for(int i = 0; i < parents.size(); i++){
+            db.collection("Parents").document(parents.get(i).getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if(!documentSnapshot.exists()){
+                        Log.d(TAG, "Böyle bir parent yok kardeşim");
+                        return;
+                    }
+
+                    checkAndAddParentName(documentSnapshot.getId(), documentSnapshot.getString("name"));
+
+                    Log.d(TAG, "bringParentNames() documentSnapshots bitti.");
+                    count++;
+
+                    if(count >= parents.size())
+                        showLvParentList();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d(TAG, "Parent getirme hata: " + e.getMessage());
+                }
+            });
+        }
+    }
+
+    private void showLvParentList() {
+        Log.d(TAG, "Parents size: " + parents.size());
+
+        ArrayList<String> parentNames = new ArrayList<>();
+
+        for(int i = 0; i < parents.size(); i++){
+            parentNames.add(parents.get(i).getIsim());
+            Log.d(TAG, parents.get(i).getIsim());
+        }
+
+        Log.d(TAG, "ParentNames size: " + parentNames.size());
+
+        if(parentNames.size() >= parents.size()){
+            parentListAdapter = new ParentListAdapter(getActivity(), parents);
+            lvParentList.setAdapter(parentListAdapter);
+            pbParentList.setVisibility(View.GONE);
+            llParentList.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void checkAndAddParentName(String id, String name) {
+        Log.d(TAG, "Id: " + id + " Name: " + name);
+
+        for(int i = 0; i < parents.size(); i++){
+            if(parents.get(i).getUid().equals(id)) {
+                parents.get(i).setIsim(name);
+                Log.d(TAG, "Id: " + id + " Name: " + name);
+                break;
+            }
+        }
+    }
+
+    private void checkParents(Parent parent){
+        if(parents.size() < 1){
+            parents.add(parent);
+            return;
+        }
+
+        for(int i = 0; i < parents.size(); i++){
+            if(parents.get(i).getUid().equals(parent.getUid())){
+                Log.d(TAG, "Parent parents a ekli");
+                return;
+            }
+        }
+
+        Log.d(TAG, "Parent uid: " + parent.getUid());
+        parents.add(parent);
+        Log.d(TAG, "Parent eklendi");
     }
 
     private void bringChatIds() {
@@ -134,7 +343,7 @@ public class TeacherChatMainFragment extends Fragment {
 
                     checkAndAdd(new ChatPreview(dataSnapshot.getValue(Chats.class), dataSnapshot.getKey()));
 
-                    if(chats.size() >= chatIds.size())
+                    if(chats.size() >= 1)
                         showLvChats();
                     else
                         Log.d(TAG, "Chats size: " + chats.size());
@@ -203,6 +412,8 @@ public class TeacherChatMainFragment extends Fragment {
             }
         });
     }
+
+    public void setTeacher(Teacher teacher) { this.teacher = teacher; }
 
     @Override
     public void onResume() {
