@@ -81,7 +81,7 @@ public class TeacherMenuListFragment extends Fragment {
     private void ekranaGit(Fragment hedef){
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.flMainActivity, hedef);
+        fragmentTransaction.replace(R.id.flTeacherMain, hedef);
         fragmentTransaction.addToBackStack("null");
         fragmentTransaction.commit();
     }
