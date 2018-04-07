@@ -1,6 +1,7 @@
 package com.example.mypreschool.Fragments.TeacherFragments;
 
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -25,7 +27,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,12 +38,13 @@ public class TeacherRequestPermissionFragment extends Fragment {
 
     private FirebaseFirestore db;
     private Teacher teacher;
-    private EditText etTitle, etDetails, etPrice;
+    private EditText etTitle, etDetails, etPrice, etDate;
     private Button btnSubmit;
     private ProgressBar pbRequest;
     private String details, title;
     private double price;
     private ArrayList<String> parentTokens;
+    private Calendar myCalendar;
 
     public TeacherRequestPermissionFragment() {
         // Required empty public constructor
@@ -54,12 +59,14 @@ public class TeacherRequestPermissionFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
         parentTokens = new ArrayList<>();
+        myCalendar = Calendar.getInstance();
 
         etDetails = view.findViewById(R.id.etDetails);
         etTitle = view.findViewById(R.id.etTitle);
         etPrice = view.findViewById(R.id.etPrice);
         btnSubmit = view.findViewById(R.id.btnSubmit);
         pbRequest = view.findViewById(R.id.pbRequest);
+        etDate = view.findViewById(R.id.etDate);
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +77,51 @@ public class TeacherRequestPermissionFragment extends Fragment {
             }
         });
 
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                myCalendar.set(Calendar.HOUR_OF_DAY, 0);
+                myCalendar.set(Calendar.MINUTE, 0);
+                myCalendar.set(Calendar.MILLISECOND, 0);
+                if(tarihiKontrolEt())
+                    editTextDoldur();
+            }
+        };
+
+        etDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(getActivity(), date, myCalendar.get(Calendar.YEAR),
+                        myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
         return view;
+    }
+
+    private boolean tarihiKontrolEt() {
+        boolean kontrol = true;
+
+        if(myCalendar.getTime().before(Calendar.getInstance().getTime())){
+            etDate.setError("Seçtiğiniz tarih bugünden önceki bir tarih olamaz");
+            kontrol = false;
+        }
+
+        return kontrol;
+    }
+
+    private void editTextDoldur() {
+        if(myCalendar == null)
+            return;
+
+        etDate.setError(null);
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        etDate.setText(format.format(myCalendar.getTime()));
     }
 
     private void addPermissionRequestToDB() {
@@ -82,6 +133,7 @@ public class TeacherRequestPermissionFragment extends Fragment {
         map.put("details", details);
         map.put("classID", teacher.getTeacherClassID());
         map.put("price", price);
+        map.put("date", myCalendar.getTime());
 
         db.collection("PermissionRequests").document().set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -90,6 +142,7 @@ public class TeacherRequestPermissionFragment extends Fragment {
                 etDetails.setText("");
                 etPrice.setText("");
                 etTitle.setText("");
+                etDate.setText("");
                 pbRequest.setVisibility(View.GONE);
                 btnSubmit.setClickable(true);
                 getParentTokens();
@@ -115,6 +168,11 @@ public class TeacherRequestPermissionFragment extends Fragment {
             price = 0;
         else
             price = Double.valueOf(etPrice.getText().toString());
+
+        if(etDate.getText().toString().isEmpty()){
+            etDate.setError("Date can not be empty!");
+            check = false;
+        }
 
         if(details.isEmpty()){
             etDetails.setError("Details can not be empty!");

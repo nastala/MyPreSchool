@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.TeacherFragments.TeacherRequestPermissionFragment">
+    tools:context=".Fragments.TeacherFragments.TeacherRequestPermissionFragment"
+    android:padding="5dp">
 
     <EditText
         android:id="@+id/etTitle"
@@ -36,11 +37,19 @@
         android:inputType="numberDecimal"
         android:layout_below="@id/svDetails"/>
 
+    <EditText
+        android:id="@+id/etDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Date"
+        android:maxLines="1"
+        android:layout_below="@id/etPrice"/>
+
     <Button
         android:id="@+id/btnSubmit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etPrice"
+        android:layout_below="@id/etDate"
         android:text="SUBMIT"/>
 
     <ProgressBar
