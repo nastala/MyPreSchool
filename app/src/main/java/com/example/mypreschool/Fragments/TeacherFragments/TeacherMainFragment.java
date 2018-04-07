@@ -24,7 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * A simple {@link Fragment} subclass.
  */
 public class TeacherMainFragment extends Fragment {
-    private Button btnShareActivity, btnFoodList, btnRequestPermission;
+    private Button btnShareActivity, btnFoodList, btnRequestPermission, btnGivenPermissions;
     private Teacher teacher;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -46,6 +46,7 @@ public class TeacherMainFragment extends Fragment {
         btnShareActivity = view.findViewById(R.id.btnShareActivity);
         btnFoodList = view.findViewById(R.id.btnFoodList);
         btnRequestPermission = view.findViewById(R.id.btnRequestPermission);
+        btnGivenPermissions = view.findViewById(R.id.btnGivenPermissions);
 
         btnShareActivity.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +70,15 @@ public class TeacherMainFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 TeacherRequestPermissionFragment hedef = new TeacherRequestPermissionFragment();
+                hedef.setTeacher(teacher);
+                ekranaGit(hedef);
+            }
+        });
+
+        btnGivenPermissions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TeacherGivenPermissionsFragment hedef = new TeacherGivenPermissionsFragment();
                 hedef.setTeacher(teacher);
                 ekranaGit(hedef);
             }

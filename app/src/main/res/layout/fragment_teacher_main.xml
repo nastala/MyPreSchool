@@ -37,4 +37,14 @@
         android:background="@color/yesil"
         android:text="REQUEST PERMISSION"
         android:textColor="@android:color/holo_green_dark" />
+
+    <Button
+        android:id="@+id/btnGivenPermissions"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/yesil"
+        android:text="GIVEN PERMISSIONS"
+        android:textColor="@android:color/holo_green_dark" />
 </LinearLayout>
