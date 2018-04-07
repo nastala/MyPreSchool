@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/acıkmavi"
     android:padding="10dp">
 
     <TextView
@@ -10,9 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:textColor="@color/siyah"
-        android:textSize="20sp"
-        android:text="Title"/>
+        android:text="Title"
+        android:textColor="@color/kirmizi"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/tvMessage"

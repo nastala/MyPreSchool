@@ -18,15 +18,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Selected School: "/>
+            android:text="Selected School: "
+            android:textColor="@color/kirmizi" />
 
         <TextView
+            android:id="@+id/tvSchoolName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:textColor="@color/siyah"
             android:text="School Name"
-            android:id="@+id/tvSchoolName"/>
+            android:textColor="@color/koyuyesil" />
     </LinearLayout>
 
     <EditText

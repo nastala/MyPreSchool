@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/acıkmavi"
     tools:context="com.example.mypreschool.ParentChatActivity">
 
     <LinearLayout
@@ -36,8 +37,9 @@
                 android:id="@+id/btnSend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:text="SEND"
-                android:layout_gravity="bottom"/>
+                android:textColor="@color/koyuyesil" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
