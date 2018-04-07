@@ -29,6 +29,16 @@
         android:textColor="@android:color/holo_green_dark" />
 
     <Button
+        android:id="@+id/btnSleepState"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/yesil"
+        android:text="STUDENT SLEEP STATE"
+        android:textColor="@android:color/holo_green_dark" />
+
+    <Button
         android:id="@+id/btnRequestPermission"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
