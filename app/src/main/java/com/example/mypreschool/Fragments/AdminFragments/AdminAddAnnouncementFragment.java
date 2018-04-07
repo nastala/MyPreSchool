@@ -2,7 +2,6 @@ package com.example.mypreschool.Fragments.AdminFragments;
 
 
 import android.app.Dialog;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.app.Fragment;
@@ -25,7 +24,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.mypreschool.Adapters.AnnouncementAdapter;
-import com.example.mypreschool.Classes.AddAnnouncementRequest;
+import com.example.mypreschool.Requests.AddAnnouncementRequest;
 import com.example.mypreschool.Classes.Announcement;
 import com.example.mypreschool.Classes.School;
 import com.example.mypreschool.R;
