@@ -35,7 +35,7 @@ import java.util.HashMap;
 public class StudentMainFragment extends Fragment {
     private final String TAG = "STUDENTMAIN";
 
-    private Button btnStatus;
+    private Button btnStatus, btnSleepState;
     private Student student;
     private FirebaseFirestore db;
 
@@ -53,10 +53,21 @@ public class StudentMainFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         btnStatus = view.findViewById(R.id.btnStatus);
+        btnSleepState = view.findViewById(R.id.btnSleepState);
+
         btnStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 StudentCalendarFragment hedef = new StudentCalendarFragment();
+                hedef.setStudent(student);
+                ekraniGetir(hedef);
+            }
+        });
+
+        btnSleepState.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StudentSleepStateFragment hedef = new StudentSleepStateFragment();
                 hedef.setStudent(student);
                 ekraniGetir(hedef);
             }
