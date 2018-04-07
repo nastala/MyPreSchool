@@ -50,10 +50,9 @@ public class ChatPreviewAdapter extends BaseAdapter {
 
         Chats chat = chats.get(i).getChats();
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
         tvTitle.setText(chat.getTitle());
         tvMessage.setText(chat.getLastMessage());
-        tvDate.setText(simpleDateFormat.format(new Date(chat.getTimestamp())));
+        tvDate.setText(chat.getZamanfarki());
 
         return mView;
     }

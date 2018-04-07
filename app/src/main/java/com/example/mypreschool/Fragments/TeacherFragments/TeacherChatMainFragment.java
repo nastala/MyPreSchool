@@ -408,7 +408,7 @@ public class TeacherChatMainFragment extends Fragment {
             public int compare(ChatPreview chatPreview, ChatPreview t1) {
                 Date date1 = new Date(chatPreview.getChats().getTimestamp());
                 Date date2 = new Date(t1.getChats().getTimestamp());
-                return date1.compareTo(date2);
+                return date2.compareTo(date1);
             }
         });
     }

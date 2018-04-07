@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.mypreschool.Classes.Student;
+import com.example.mypreschool.Fragments.BottomNavigationFragments.ParentChatMainFragment;
 import com.example.mypreschool.Fragments.BottomNavigationFragments.StudentAnnouncementFragment;
 import com.example.mypreschool.Fragments.BottomNavigationFragments.StudentMainFragment;
 import com.example.mypreschool.Fragments.BottomNavigationFragments.StudentNotificationsFragment;
@@ -49,6 +50,10 @@ public class StudentMainActivity extends AppCompatActivity {
                     StudentNotificationsFragment hedef = new StudentNotificationsFragment();
                     hedef.setStudent(student);
                     ekraniGetir(hedef);
+                    return true;
+                case R.id.navigation_chat:
+                    ParentChatMainFragment parentChatMainFragment = new ParentChatMainFragment();
+                    ekraniGetir(parentChatMainFragment);
                     return true;
             }
             return false;

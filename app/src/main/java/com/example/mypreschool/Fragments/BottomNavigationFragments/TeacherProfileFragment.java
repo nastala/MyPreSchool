@@ -1,7 +1,9 @@
 package com.example.mypreschool.Fragments.BottomNavigationFragments;
 
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
@@ -83,11 +85,28 @@ public class TeacherProfileFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i){
                     case 0:
+                        Intent callIntent = new Intent(Intent.ACTION_CALL);
+                        callIntent.setData(Uri.parse("tel:" + teacher.getTeacherPhoneNumber()));
+                        try {
+                            startActivity(callIntent);
+                        }catch (ActivityNotFoundException e){
+                            Log.d(TAG, "ActivityNotFound exc: " + e.getMessage());
+                        }
                         Log.d(TAG, "Call tıklandı");
                         break;
                     case 1:
                         Log.d(TAG, "Chat tıklandı");
                         checkMembers();
+                        break;
+                    case 2:
+                        Intent intent = new Intent(Intent.ACTION_SENDTO);
+                        intent.setData(Uri.parse("mailto:" + teacher.getTeacherEmail()));
+                        try {
+                            startActivity(intent);
+                        }catch (ActivityNotFoundException e){
+                            Log.d(TAG, "ActivityNotFound exc: " + e.getMessage());
+                        }
+                        break;
                 }
             }
         });
