@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/empty"
+        android:title="@string/options"
+        android:orderInCategory="101"
+        android:icon="@drawable/ic_more_vert_black_48dp"
+        app:showAsAction="always">
+
+        <menu>
+            <item android:id="@+id/action_call_teacher"
+                android:icon="@drawable/call"
+                app:showAsAction="ifRoom"
+                android:title="@string/callTeacher" />
+
+            <item android:id="@+id/action_chat_teacher"
+                android:icon="@drawable/chat"
+                app:showAsAction="ifRoom"
+                android:title="@string/chatTeacher" />
+
+            <item android:id="@+id/action_email_teacher"
+                android:icon="@drawable/email"
+                app:showAsAction="ifRoom"
+                android:title="@string/emailTeacher" />
+        </menu>
+    </item>
+</menu>

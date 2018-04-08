@@ -1,12 +1,16 @@
 package com.example.mypreschool.Fragments.BottomNavigationFragments;
 
 
+import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.mypreschool.Adapters.TeacherContactAdapter;
@@ -49,6 +54,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class TeacherProfileFragment extends Fragment {
     private final String TAG = "TEACHERPROFILEFRAGMENT";
+    private final int CALL_PHONE_REQUEST = 1002;
 
     private ArrayList<TeacherContact> contacts;
     private Student student;
@@ -60,6 +66,7 @@ public class TeacherProfileFragment extends Fragment {
     private ListView lvContact;
     private FirebaseAuth mAuth;
     private boolean memberCheck;
+    private String extra;
 
     public TeacherProfileFragment() {
         // Required empty public constructor
@@ -85,27 +92,17 @@ public class TeacherProfileFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i){
                     case 0:
-                        Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:" + teacher.getTeacherPhoneNumber()));
-                        try {
-                            startActivity(callIntent);
-                        }catch (ActivityNotFoundException e){
-                            Log.d(TAG, "ActivityNotFound exc: " + e.getMessage());
-                        }
+                        if(isPermissionGranted())
+                            callTeacher();
                         Log.d(TAG, "Call tıklandı");
                         break;
                     case 1:
                         Log.d(TAG, "Chat tıklandı");
-                        checkMembers();
+                        chatTeacher();
                         break;
                     case 2:
-                        Intent intent = new Intent(Intent.ACTION_SENDTO);
-                        intent.setData(Uri.parse("mailto:" + teacher.getTeacherEmail()));
-                        try {
-                            startActivity(intent);
-                        }catch (ActivityNotFoundException e){
-                            Log.d(TAG, "ActivityNotFound exc: " + e.getMessage());
-                        }
+                        Log.d(TAG, "Email tıklandı");
+                        emailTeacher();
                         break;
                 }
             }
@@ -114,6 +111,48 @@ public class TeacherProfileFragment extends Fragment {
         bringTeacherDetails();
 
         return view;
+    }
+
+    private void chatTeacher(){
+        checkMembers();
+    }
+
+    private void emailTeacher(){
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:" + teacher.getTeacherEmail()));
+        try {
+            startActivity(intent);
+        }catch (ActivityNotFoundException e){
+            Log.d(TAG, "ActivityNotFound exc: " + e.getMessage());
+        }
+    }
+
+    private void callTeacher(){
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + teacher.getTeacherPhoneNumber()));
+        try {
+            startActivity(callIntent);
+        }catch (ActivityNotFoundException e){
+            Log.d(TAG, "ActivityNotFound exc: " + e.getMessage());
+        }
+    }
+
+    public  boolean isPermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.CALL_PHONE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG,"Permission is granted");
+                return true;
+            } else {
+                Log.d(TAG,"Permission is revoked");
+                requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, CALL_PHONE_REQUEST);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.d("TAG","Permission is granted");
+            return true;
+        }
     }
 
     private void checkMembers() {
@@ -217,10 +256,45 @@ public class TeacherProfileFragment extends Fragment {
         contacts.add(new TeacherContact("E-mail:", teacher.getTeacherEmail(), R.drawable.email));
         TeacherContactAdapter adapter = new TeacherContactAdapter(getActivity(), contacts);
         lvContact.setAdapter(adapter);
+
+        if(extra != null){
+            switch (extra){
+                case "call":
+                    if(isPermissionGranted())
+                        callTeacher();
+                    break;
+                case "chat":
+                    chatTeacher();
+                    break;
+                case "email":
+                    emailTeacher();
+                    break;
+            }
+        }
     }
 
     public void setStudent(Student student){
         Log.d(TAG, "Student Name: " + student.getName());
         this.student = student;
+    }
+
+    public void setExtra(String extra) {
+        this.extra = extra;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        Log.d(TAG, "Permission req geldi");
+
+        if(requestCode == CALL_PHONE_REQUEST){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                callTeacher();
+            }
+            else {
+                Toast.makeText(getActivity(), "You must accept appropriate permissions to make call to teacher!", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

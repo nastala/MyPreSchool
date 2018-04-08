@@ -8,10 +8,12 @@ import android.support.design.widget.BottomNavigationView;
 import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.example.mypreschool.Classes.Student;
 import com.example.mypreschool.Fragments.BottomNavigationFragments.ParentChatMainFragment;
@@ -19,6 +21,7 @@ import com.example.mypreschool.Fragments.BottomNavigationFragments.StudentAnnoun
 import com.example.mypreschool.Fragments.BottomNavigationFragments.StudentMainFragment;
 import com.example.mypreschool.Fragments.BottomNavigationFragments.StudentNotificationsFragment;
 import com.example.mypreschool.Fragments.BottomNavigationFragments.StudentShareListFragment;
+import com.example.mypreschool.Fragments.BottomNavigationFragments.TeacherProfileFragment;
 import com.example.mypreschool.Fragments.LoginFragment;
 
 public class StudentMainActivity extends AppCompatActivity {
@@ -86,6 +89,37 @@ public class StudentMainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.flStudentMain, hedef);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.parent_toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        TeacherProfileFragment teacherProfileFragment = new TeacherProfileFragment();
+        teacherProfileFragment.setStudent(student);
+
+        switch (item.getItemId()){
+            case R.id.action_call_teacher:
+                teacherProfileFragment.setExtra("call");
+                ekraniGetir(teacherProfileFragment);
+                break;
+
+            case R.id.action_chat_teacher:
+                teacherProfileFragment.setExtra("chat");
+                ekraniGetir(teacherProfileFragment);
+                break;
+
+            case R.id.action_email_teacher:
+                teacherProfileFragment.setExtra("email");
+                ekraniGetir(teacherProfileFragment);
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public Student getStudent(){ return  student; }
