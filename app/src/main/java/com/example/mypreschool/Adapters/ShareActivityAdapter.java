@@ -100,7 +100,7 @@ public class ShareActivityAdapter extends BaseAdapter {
         btnLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(onItemClickListener != null)
+                if(onItemClickListener != null && !shareActivity.isTeacher())
                     onItemClickListener.onLikeButtonClick(shareActivity);
             }
         });
@@ -120,6 +120,9 @@ public class ShareActivityAdapter extends BaseAdapter {
                     onItemClickListener.onCivTeacherClick();
             }
         });
+
+        if(shareActivity.isTeacher())
+            btnLike.setClickable(false);
 
         return view;
     }

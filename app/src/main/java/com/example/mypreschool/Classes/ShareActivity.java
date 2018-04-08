@@ -10,12 +10,20 @@ import java.util.Date;
 public class ShareActivity {
     private String activityTitle, activityDetails, activityID, sgurl, tsgurl, id;
     private int likeNumber;
-    private boolean isCurrentParentLiked;
+    private boolean isCurrentParentLiked, teacher;
     private Date date;
     private ArrayList<String> likedParents;
 
     public ShareActivity(){
+        teacher = false;
+    }
 
+    public boolean isTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(boolean teacher) {
+        this.teacher = teacher;
     }
 
     public Date getDate() {

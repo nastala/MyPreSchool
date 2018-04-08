@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import com.example.mypreschool.Classes.Teacher;
 import com.example.mypreschool.Fragments.TeacherFragments.TeacherChatMainFragment;
+import com.example.mypreschool.Fragments.TeacherFragments.TeacherListSharedActivitiesFragment;
 import com.example.mypreschool.Fragments.TeacherFragments.TeacherMainFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -47,7 +48,9 @@ public class TeacherMainActivity extends AppCompatActivity {
                     goScreen(hedef);
                     return true;
                 case R.id.navigation_dashboard:
-
+                    TeacherListSharedActivitiesFragment teacherListSharedActivitiesFragment = new TeacherListSharedActivitiesFragment();
+                    teacherListSharedActivitiesFragment.setTeacher(teacher);
+                    goScreen(teacherListSharedActivitiesFragment);
                     return true;
                 case R.id.navigation_notifications:
 
@@ -81,6 +84,10 @@ public class TeacherMainActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        TeacherMainFragment hedef = new TeacherMainFragment();
+        hedef.setTeacher(teacher);
+        goScreen(hedef);
 
         teacherDetaylariGetir();
     }
