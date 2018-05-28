@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#b0e2ff</color>
     <color name="colorPrimaryDark">#CDC0B0</color>
-    <color name="colorAccent">#FF4500</color>
+    <color name="colorAccent">#b0e2ff</color>
     <color name="beyaz">#fbf971</color>
     <color name="siyah">#000000</color>
     <color name="yesil">#b0e2ff</color>
