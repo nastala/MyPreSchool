@@ -9,8 +9,13 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+
 import com.example.mypreschool.Classes.Teacher;
+import com.example.mypreschool.Fragments.LoginFragment;
 import com.example.mypreschool.Fragments.TeacherFragments.TeacherChatMainFragment;
 import com.example.mypreschool.Fragments.TeacherFragments.TeacherListSharedActivitiesFragment;
 import com.example.mypreschool.Fragments.TeacherFragments.TeacherMainFragment;
@@ -30,6 +35,7 @@ public class TeacherMainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private Teacher teacher;
     private SharedPref sharedPref;
+    private ProgressBar pbMain;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -68,10 +74,16 @@ public class TeacherMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_main);
 
+        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+
         sharedPref = new SharedPref(this);
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+
+        pbMain = findViewById(R.id.pbMain);
 
         if(sharedPref.getTokenRefresh()) {
             String token = FirebaseInstanceId.getInstance().getToken();
@@ -81,10 +93,6 @@ public class TeacherMainActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        TeacherMainFragment hedef = new TeacherMainFragment();
-        hedef.setTeacher(teacher);
-        goScreen(hedef);
 
         teacherDetaylariGetir();
     }
@@ -124,6 +132,8 @@ public class TeacherMainActivity extends AppCompatActivity {
     }
 
     private void teacherDetaylariGetir(){
+        pbMain.setVisibility(View.VISIBLE);
+
         teacher = new Teacher();
 
         if(mAuth.getUid() == null){
@@ -139,6 +149,7 @@ public class TeacherMainActivity extends AppCompatActivity {
                     return;
 
                 teacher.setTeacherSchoolID(documentSnapshot.getString("schoolID"));
+                Log.d("TEACHERMAIN", "Teacher geldi " + teacher.getTeacherSchoolID());
                 teacher.setTeacherEmail(documentSnapshot.getString("email"));
                 teacher.setTeacherName(documentSnapshot.getString("name"));
                 teacher.setTeacherPhoneNumber(documentSnapshot.getString("phoneNumber"));
@@ -146,12 +157,45 @@ public class TeacherMainActivity extends AppCompatActivity {
                 teacher.setTeacherPhoto(documentSnapshot.getString("sgurl"));
 
                 teacherControl = true;
+                TeacherMainFragment hedef = new TeacherMainFragment();
+                hedef.setTeacher(teacher);
+                goScreen(hedef);
+                pbMain.setVisibility(View.GONE);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d("TEACHERMAIN", "TEACHER GETIRME HATA: " + e.getMessage());
+                pbMain.setVisibility(View.GONE);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.teacher_toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_logout:
+                if(mAuth != null)
+                    mAuth.signOut();
+
+                FragmentManager fm = this.getFragmentManager();
+                for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                    fm.popBackStack();
+                }
+
+                Intent i = new Intent(this, MainActivity.class);
+                startActivity(i);
+                this.finish();
+
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

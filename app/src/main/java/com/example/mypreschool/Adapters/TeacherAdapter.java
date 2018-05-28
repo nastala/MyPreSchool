@@ -56,12 +56,13 @@ public class TeacherAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = mInflater.inflate(R.layout.layout_list_teacher_adapter, null);
+        if(convertView == null)
+            convertView = mInflater.inflate(R.layout.layout_list_teacher_adapter, parent, false);
 
-        TextView tvTeacherName = view.findViewById(R.id.tvTeacherName);
-        ImageView ivTeacherDelete = view.findViewById(R.id.ivTeacherDelete);
-        ImageView ivTeacherEdit = view.findViewById(R.id.ivTeacherEdit);
-        CircleImageView civTeacher = view.findViewById(R.id.civTeacher);
+        TextView tvTeacherName = convertView.findViewById(R.id.tvTeacherName);
+        ImageView ivTeacherDelete = convertView.findViewById(R.id.ivTeacherDelete);
+        ImageView ivTeacherEdit = convertView.findViewById(R.id.ivTeacherEdit);
+        CircleImageView civTeacher = convertView.findViewById(R.id.civTeacher);
 
         final Teacher teacher = teachers.get(position);
 
@@ -91,6 +92,6 @@ public class TeacherAdapter extends BaseAdapter {
             }
         });
 
-        return view;
+        return convertView;
     }
 }

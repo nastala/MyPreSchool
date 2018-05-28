@@ -9,6 +9,8 @@ import android.app.Fragment;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -57,6 +59,8 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
+
+        setHasOptionsMenu(false);
 
         db = FirebaseFirestore.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -112,12 +116,14 @@ public class LoginFragment extends Fragment {
             public void onSuccess(AuthResult authResult) {
                 Log.d(TAG, "LOGIN BASARILI");
 
+                pbLogin.setVisibility(View.GONE);
                 tipiGetir(authResult.getUser().getUid());
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d(TAG, "Login hata: " + e.getMessage());
+                pbLogin.setVisibility(View.GONE);
             }
         });
     }

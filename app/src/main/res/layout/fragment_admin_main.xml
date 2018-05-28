@@ -1,60 +1,164 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.mypreschool.Fragments.AdminFragments.AdminMainFragment"
-    android:background="@color/acıkmavi"
-    android:orientation="vertical">
+    android:background="@color/acıkmavi">
 
-    <Button
-        android:id="@+id/btnSchoolAdmin"
-        android:layout_width="150dp"
-        android:layout_height="55dp"
-        android:layout_marginLeft="120dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="70dp"
-        android:background="@color/yesil"
-        android:text="MANAGE SCHOOLS"
-        android:textColor="@android:color/holo_green_dark"
-        android:textColorHighlight="@android:color/holo_green_dark" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btnTeacherAdmin"
-        android:layout_width="150dp"
-        android:layout_height="55dp"
-        android:layout_marginLeft="120dp"
-        android:layout_marginTop="20dp"
-        android:background="@color/yesil"
-        android:text="MANAGE TEACHERS"
-        android:textColor="@android:color/holo_green_dark" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp">
 
-    <Button
-        android:id="@+id/btnParentAdmin"
-        android:layout_width="150dp"
-        android:layout_height="55dp"
-        android:layout_marginLeft="120dp"
-        android:layout_marginTop="20dp"
-        android:background="@color/yesil"
-        android:text="MANAGE PARENTS"
-        android:textColor="@android:color/holo_green_dark" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/civTeacher"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:src="@drawable/admin"/>
 
-    <Button
-        android:id="@+id/btnStudentAdmin"
-        android:layout_width="150dp"
-        android:layout_height="55dp"
-        android:layout_marginLeft="120dp"
-        android:layout_marginTop="20dp"
-        android:background="@color/yesil"
-        android:text="MANAGE STUDENTS"
-        android:textColor="@android:color/holo_green_dark" />
+            <TextView
+                android:id="@+id/tvTeacherName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="25sp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/koyuyesil"
+                android:text="Admin"/>
+        </LinearLayout>
 
-    <Button
-        android:id="@+id/btnAddAnnouncement"
-        android:layout_width="150dp"
-        android:layout_height="55dp"
-        android:layout_marginLeft="120dp"
-        android:layout_marginTop="20dp"
-        android:background="@color/yesil"
-        android:text="ADD ANNOUNCEMENT"
-        android:textColor="@android:color/holo_green_dark" />
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="50dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:id="@+id/btnSchoolAdmin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:src="@drawable/adminschool"
+                        android:layout_gravity="center"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Manage Schools"
+                        android:textColor="@color/koyuyesil"
+                        android:layout_marginTop="5dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btnTeacherAdmin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginStart="15dp">
+
+                    <ImageView
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:src="@drawable/adminteacher"
+                        android:layout_gravity="center"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Manage Teachers"
+                        android:textColor="@color/koyuyesil"
+                        android:layout_marginTop="5dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btnParentAdmin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginStart="15dp">
+
+                    <ImageView
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:src="@drawable/adminparent"
+                        android:layout_gravity="center"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Manage Parents"
+                        android:textColor="@color/koyuyesil"
+                        android:layout_marginTop="5dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:id="@+id/btnStudentAdmin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:src="@drawable/adminstudent"
+                        android:layout_gravity="center"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Manage Students"
+                        android:textColor="@color/koyuyesil"
+                        android:layout_marginTop="5dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btnAddAnnouncement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginStart="15dp">
+
+                    <ImageView
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:src="@drawable/adminannouncement2"
+                        android:layout_gravity="center"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Add an Announcement"
+                        android:textColor="@color/koyuyesil"
+                        android:layout_marginTop="5dp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

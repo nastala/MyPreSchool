@@ -4,12 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.TeacherFragments.TeacherRequestPermissionFragment"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:background="@color/acıkmavi">
 
     <EditText
         android:id="@+id/etTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/koyuyesil"
+        android:layout_marginTop="10dp"
         android:maxLines="1"
         android:hint="Title"/>
 
@@ -17,12 +20,14 @@
         android:id="@+id/svDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_below="@id/etTitle">
 
         <EditText
             android:id="@+id/etDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/koyuyesil"
             android:hint="Details"
             android:inputType="textMultiLine"
             android:maxLines="5"/>
@@ -32,6 +37,8 @@
         android:id="@+id/etPrice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/koyuyesil"
+        android:layout_marginTop="10dp"
         android:hint="Price"
         android:maxLines="1"
         android:inputType="numberDecimal"
@@ -41,15 +48,21 @@
         android:id="@+id/etDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/koyuyesil"
+        android:layout_marginTop="10dp"
         android:hint="Date"
         android:maxLines="1"
         android:layout_below="@id/etPrice"/>
 
     <Button
         android:id="@+id/btnSubmit"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_below="@id/etDate"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/koyuyesil"
         android:text="SUBMIT"/>
 
     <ProgressBar

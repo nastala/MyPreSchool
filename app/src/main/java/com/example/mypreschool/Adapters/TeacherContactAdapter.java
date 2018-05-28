@@ -38,11 +38,12 @@ public class TeacherContactAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        View mView = layoutInflater.inflate(R.layout.adapter_teacher_contact_adapter, null);
+        if(view == null)
+            view = layoutInflater.inflate(R.layout.adapter_teacher_contact_adapter, viewGroup, false);
 
-        CircleImageView civContact = mView.findViewById(R.id.civContact);
-        TextView tvName = mView.findViewById(R.id.tvName);
-        TextView tvValue = mView.findViewById(R.id.tvValue);
+        CircleImageView civContact = view.findViewById(R.id.civContact);
+        TextView tvName = view.findViewById(R.id.tvName);
+        TextView tvValue = view.findViewById(R.id.tvValue);
 
         TeacherContact teacherContact = contacts.get(i);
 
@@ -50,6 +51,6 @@ public class TeacherContactAdapter extends BaseAdapter {
         tvValue.setText(teacherContact.getValue());
         civContact.setImageResource(teacherContact.getResource());
 
-        return mView;
+        return view;
     }
 }

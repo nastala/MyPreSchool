@@ -41,10 +41,11 @@ public class GivenRequestsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        View mView = layoutInflater.inflate(R.layout.adapter_given_requests, null);
+        if(view == null)
+            view = layoutInflater.inflate(R.layout.adapter_given_requests, viewGroup, false);
 
-        TextView tvStudentName = mView.findViewById(R.id.tvStudentName);
-        ImageView ivPermission = mView.findViewById(R.id.ivPermission);
+        TextView tvStudentName = view.findViewById(R.id.tvStudentName);
+        ImageView ivPermission = view.findViewById(R.id.ivPermission);
 
         GivenRequest givenRequest = requests.get(i);
 
@@ -55,6 +56,6 @@ public class GivenRequestsAdapter extends BaseAdapter {
         else
             ivPermission.setImageResource(R.drawable.no);
 
-        return mView;
+        return view;
     }
 }

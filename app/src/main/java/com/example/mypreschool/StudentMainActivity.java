@@ -2,6 +2,7 @@ package com.example.mypreschool;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -23,12 +24,14 @@ import com.example.mypreschool.Fragments.BottomNavigationFragments.StudentNotifi
 import com.example.mypreschool.Fragments.BottomNavigationFragments.StudentShareListFragment;
 import com.example.mypreschool.Fragments.BottomNavigationFragments.TeacherProfileFragment;
 import com.example.mypreschool.Fragments.LoginFragment;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class StudentMainActivity extends AppCompatActivity {
     private final String TAG = "STUDENTMAIN";
 
     private Student student;
     private FrameLayout flStudentMain;
+    private FirebaseAuth mAuth;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -68,7 +71,12 @@ public class StudentMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_main);
 
+        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+
         student = (Student)(getIntent().getSerializableExtra("student"));
+        mAuth = FirebaseAuth.getInstance();
 
         flStudentMain = findViewById(R.id.flStudentMain);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -116,6 +124,21 @@ public class StudentMainActivity extends AppCompatActivity {
             case R.id.action_email_teacher:
                 teacherProfileFragment.setExtra("email");
                 ekraniGetir(teacherProfileFragment);
+                break;
+
+            case R.id.action_logout:
+                if(mAuth != null)
+                    mAuth.signOut();
+
+                FragmentManager fm = this.getFragmentManager();
+                for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                    fm.popBackStack();
+                }
+
+                Intent i = new Intent(this, MainActivity.class);
+                startActivity(i);
+                this.finish();
+
                 break;
         }
 

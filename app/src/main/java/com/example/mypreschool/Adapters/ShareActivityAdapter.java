@@ -59,14 +59,15 @@ public class ShareActivityAdapter extends BaseAdapter {
     @SuppressLint("ResourceAsColor")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = mInflater.inflate(R.layout.layout_share_activity_adapter, null);
+        if(convertView == null)
+            convertView = mInflater.inflate(R.layout.layout_share_activity_adapter, parent, false);
 
-        CircleImageView civTeacher = view.findViewById(R.id.civTeacher);
-        TextView tvTitle = view.findViewById(R.id.tvTitle);
-        TextView tvDetails = view.findViewById(R.id.tvDetails);
-        final ImageView ivActivity = view.findViewById(R.id.ivActivity);
-        TextView tvLikes = view.findViewById(R.id.tvLikes);
-        Button btnLike = view.findViewById(R.id.btnLike);
+        CircleImageView civTeacher = convertView.findViewById(R.id.civTeacher);
+        TextView tvTitle = convertView.findViewById(R.id.tvTitle);
+        TextView tvDetails = convertView.findViewById(R.id.tvDetails);
+        final ImageView ivActivity = convertView.findViewById(R.id.ivActivity);
+        TextView tvLikes = convertView.findViewById(R.id.tvLikes);
+        Button btnLike = convertView.findViewById(R.id.btnLike);
 
         final ShareActivity shareActivity = shareActivities.get(position);
 
@@ -124,7 +125,7 @@ public class ShareActivityAdapter extends BaseAdapter {
         if(shareActivity.isTeacher())
             btnLike.setClickable(false);
 
-        return view;
+        return convertView;
     }
 
     public void updateShareActivities(ArrayList<ShareActivity> shareActivities) {

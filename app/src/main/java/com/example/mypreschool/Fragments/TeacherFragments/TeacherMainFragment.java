@@ -5,26 +5,27 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.mypreschool.Classes.Teacher;
 import com.example.mypreschool.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class TeacherMainFragment extends Fragment {
-    private Button btnShareActivity, btnFoodList, btnRequestPermission, btnGivenPermissions, btnSleepState;
+    private LinearLayout btnShareActivity, btnFoodList, btnRequestPermission, btnGivenPermissions, btnSleepState;
+    private CircleImageView civTeacher;
+    private TextView tvTeacherName;
     private Teacher teacher;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -48,6 +49,8 @@ public class TeacherMainFragment extends Fragment {
         btnRequestPermission = view.findViewById(R.id.btnRequestPermission);
         btnGivenPermissions = view.findViewById(R.id.btnGivenPermissions);
         btnSleepState = view.findViewById(R.id.btnSleepState);
+        civTeacher = view.findViewById(R.id.civTeacher);
+        tvTeacherName = view.findViewById(R.id.tvTeacherName);
 
         btnShareActivity.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +96,12 @@ public class TeacherMainFragment extends Fragment {
                 ekranaGit(hedef);
             }
         });
+
+        Glide.with(civTeacher.getContext())
+                .load(teacher.getTeacherPhoto())
+                .into(civTeacher);
+
+        tvTeacherName.setText(teacher.getTeacherName());
 
         return view;
     }

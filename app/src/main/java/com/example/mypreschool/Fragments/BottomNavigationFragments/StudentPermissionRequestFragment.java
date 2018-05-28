@@ -70,10 +70,11 @@ public class StudentPermissionRequestFragment extends Fragment {
         pbStudent.setVisibility(View.VISIBLE);
         requests.clear();
 
-        db.collection("PermissionRequests").whereEqualTo("classID", student.getClassID()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        db.collection("PermissionRequests").whereEqualTo("classID", student.getClassID())
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
-                counter = documentSnapshots.size();
+                counter = 0;
                 Log.d(TAG, "Counter " + counter);
 
                 if(documentSnapshots.isEmpty()){
@@ -88,6 +89,13 @@ public class StudentPermissionRequestFragment extends Fragment {
                         pbStudent.setVisibility(View.GONE);
                         return;
                     }
+
+                    if(documentSnapshot.getDate("date").before(Calendar.getInstance().getTime())) {
+                        Log.d(TAG, "Date bugunden once geldi. Date: " + documentSnapshot.getDate("date"));
+                        continue;
+                    }
+
+                    counter++;
 
                     String key = documentSnapshot.getId();
                     Date date = documentSnapshot.getDate("date");
@@ -130,8 +138,10 @@ public class StudentPermissionRequestFragment extends Fragment {
                             requests.remove(request);
                             request.setGivenRequestId(documentSnapshot.getId());
                             request.setGivenRequest(true);
-                            if(checkRequests(request))
+                            if(checkRequests(request)) {
+                                request.setAllowed(documentSnapshot.getBoolean("permission"));
                                 givenRequests.add(request);
+                            }
                             else{
                                 for (int i = 0; i < givenRequests.size(); i++){
                                     if(request.getGivenRequestId().equals(givenRequests.get(i).getGivenRequestId())){
@@ -204,6 +214,11 @@ public class StudentPermissionRequestFragment extends Fragment {
                 Map<String, Object> map = new HashMap<>();
                 map.put("permission", true);
 
+                //givenRequests.remove(permissionRequest);
+                permissionRequest.setGivenRequest(true);
+                permissionRequest.setAllowed(true);
+                givenRequests.set(index, permissionRequest);
+
                 db.collection("GivenRequests").document(permissionRequest.getGivenRequestId()).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -226,6 +241,11 @@ public class StudentPermissionRequestFragment extends Fragment {
                 Log.d(TAG, "gpAdapter onIvNoClick");
                 Map<String, Object> map = new HashMap<>();
                 map.put("permission", false);
+
+                //givenRequests.remove(permissionRequest);
+                permissionRequest.setGivenRequest(true);
+                permissionRequest.setAllowed(false);
+                givenRequests.set(index, permissionRequest);
 
                 db.collection("GivenRequests").document(permissionRequest.getGivenRequestId()).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -275,11 +295,16 @@ public class StudentPermissionRequestFragment extends Fragment {
                 map.put("studentID", student.getStudentID());
                 map.put("permission", true);
 
+                permissionRequest.setAllowed(true);
+                permissionRequest.setGivenRequest(true);
+                givenRequests.add(permissionRequest);
+
                 db.collection("GivenRequests").document().set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Given Requests'e eklendi");
                         adapter.update(requests);
+                        gpAdapter.update(givenRequests);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -296,11 +321,16 @@ public class StudentPermissionRequestFragment extends Fragment {
                 map.put("studentID", student.getStudentID());
                 map.put("permission", false);
 
+                permissionRequest.setAllowed(false);
+                permissionRequest.setGivenRequest(true);
+                givenRequests.add(permissionRequest);
+
                 db.collection("GivenRequests").document().set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Given Requests'e eklendi");
                         adapter.update(requests);
+                        gpAdapter.update(givenRequests);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

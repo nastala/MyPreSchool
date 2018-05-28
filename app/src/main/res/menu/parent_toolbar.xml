@@ -24,6 +24,11 @@
                 android:icon="@drawable/email"
                 app:showAsAction="ifRoom"
                 android:title="@string/emailTeacher" />
+
+            <item android:id="@+id/action_logout"
+                android:icon="@drawable/logout"
+                app:showAsAction="ifRoom"
+                android:title="@string/logout" />
         </menu>
     </item>
 </menu>

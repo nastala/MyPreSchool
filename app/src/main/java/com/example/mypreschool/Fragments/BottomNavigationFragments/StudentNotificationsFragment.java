@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.example.mypreschool.Classes.Student;
 import com.example.mypreschool.R;
@@ -17,7 +18,7 @@ import com.example.mypreschool.R;
  * A simple {@link Fragment} subclass.
  */
 public class StudentNotificationsFragment extends Fragment {
-    private Button btnAnnouncement, btnRequestPermission;
+    private LinearLayout btnAnnouncement, btnRequestPermission;
     private Student student;
 
     public StudentNotificationsFragment() {

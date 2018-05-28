@@ -58,11 +58,12 @@ public class StudentAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = mInflater.inflate(R.layout.layout_list_student_adapter, null);
+        if(convertView == null)
+            convertView = mInflater.inflate(R.layout.layout_list_student_adapter, parent, false);
 
-        CircleImageView civStudentImage = view.findViewById(R.id.civStudentImage);
-        TextView tvStudentName = view.findViewById(R.id.tvStudentName);
-        final ImageView ivStudentDelete = view.findViewById(R.id.ivStudentDelete);
+        CircleImageView civStudentImage = convertView.findViewById(R.id.civStudentImage);
+        TextView tvStudentName = convertView.findViewById(R.id.tvStudentName);
+        final ImageView ivStudentDelete = convertView.findViewById(R.id.ivStudentDelete);
 
         final Student student = students.get(position);
 
@@ -88,6 +89,6 @@ public class StudentAdapter extends BaseAdapter {
 
         tvStudentName.setText(student.getName());
 
-        return view;
+        return convertView;
     }
 }

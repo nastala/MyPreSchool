@@ -43,11 +43,13 @@ public class AnnouncementAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = mInflater.inflate(R.layout.layout_announcement_adapter, null);
+        if(convertView == null){
+            convertView = mInflater.inflate(R.layout.layout_announcement_adapter, parent, false);
+        }
 
-        TextView tvTitle = view.findViewById(R.id.tvTitle);
-        TextView tvSchoolName = view.findViewById(R.id.tvSchoolName);
-        TextView tvDetails = view.findViewById(R.id.tvDetails);
+        TextView tvTitle = convertView.findViewById(R.id.tvTitle);
+        TextView tvSchoolName = convertView.findViewById(R.id.tvSchoolName);
+        TextView tvDetails = convertView.findViewById(R.id.tvDetails);
 
         Announcement announcement = announcements.get(position);
 
@@ -55,6 +57,6 @@ public class AnnouncementAdapter extends BaseAdapter {
         tvSchoolName.setText(announcement.getSchoolName());
         tvDetails.setText(announcement.getDetails());
 
-        return view;
+        return convertView;
     }
 }

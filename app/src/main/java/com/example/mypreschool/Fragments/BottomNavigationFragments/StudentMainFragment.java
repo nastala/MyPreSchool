@@ -14,10 +14,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 import com.example.mypreschool.Classes.Student;
 import com.example.mypreschool.R;
 import com.example.mypreschool.SharedPref;
@@ -29,13 +32,17 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class StudentMainFragment extends Fragment {
     private final String TAG = "STUDENTMAIN";
 
-    private Button btnStatus, btnSleepState;
+    private LinearLayout btnStatus, btnSleepState;
+    private CircleImageView civStudent;
+    private TextView tvStudentName;
     private Student student;
     private FirebaseFirestore db;
 
@@ -54,6 +61,8 @@ public class StudentMainFragment extends Fragment {
 
         btnStatus = view.findViewById(R.id.btnStatus);
         btnSleepState = view.findViewById(R.id.btnSleepState);
+        tvStudentName = view.findViewById(R.id.tvStudentName);
+        civStudent = view.findViewById(R.id.civStudent);
 
         btnStatus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +81,12 @@ public class StudentMainFragment extends Fragment {
                 ekraniGetir(hedef);
             }
         });
+
+        Glide.with(civStudent.getContext())
+                .load(student.getSgurl())
+                .into(civStudent);
+
+        tvStudentName.setText(student.getName());
 
         return view;
     }

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.example.mypreschool.R;
 
@@ -16,7 +17,7 @@ import com.example.mypreschool.R;
  * A simple {@link Fragment} subclass.
  */
 public class AdminMainFragment extends Fragment {
-    private Button btnSchoolAdmin, btnTeacherAdmin, btnParentAdmin, btnStudentAdmin, btnAddAnnouncement;
+    private LinearLayout btnSchoolAdmin, btnTeacherAdmin, btnParentAdmin, btnStudentAdmin, btnAddAnnouncement;
 
     public AdminMainFragment() {
         // Required empty public constructor

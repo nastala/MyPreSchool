@@ -3,8 +3,10 @@ package com.example.mypreschool;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.widget.FrameLayout;
 
 import com.example.mypreschool.Fragments.LoginFragment;
@@ -33,5 +35,12 @@ public class MainActivity extends AppCompatActivity {
         }else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.clear();
+        getMenuInflater().inflate(R.menu.empty_toolbar, menu);
+        return true;
     }
 }

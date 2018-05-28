@@ -42,10 +42,11 @@ public class ParentListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
-        View mView = layoutInflater.inflate(R.layout.adapter_parent_list, null);
+        if(view == null)
+            view = layoutInflater.inflate(R.layout.adapter_parent_list, viewGroup, false);
 
-        TextView tvParentName = mView.findViewById(R.id.tvParentName);
-        CheckBox cbCheck = mView.findViewById(R.id.cbCheck);
+        TextView tvParentName = view.findViewById(R.id.tvParentName);
+        CheckBox cbCheck = view.findViewById(R.id.cbCheck);
 
         Parent parent = parents.get(i);
 
@@ -63,7 +64,7 @@ public class ParentListAdapter extends BaseAdapter {
             }
         });
 
-        return mView;
+        return view;
     }
 
     public ArrayList<Parent> getParents() { return parents; }

@@ -18,4 +18,5 @@
     <string name="callTeacher">Call Teacher</string>
     <string name="chatTeacher">Chat Teacher</string>
     <string name="emailTeacher">Email to Teacher</string>
+    <string name="logout">Logout</string>
 </resources>

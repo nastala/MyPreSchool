@@ -48,19 +48,31 @@ public class PermissionRequestAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
-        View mView = layoutInflater.inflate(R.layout.adapter_student_permission_requests, null);
+        if(view == null)
+            view = layoutInflater.inflate(R.layout.adapter_student_permission_requests, viewGroup, false);
 
-        TextView tvTitle = mView.findViewById(R.id.tvTitle);
-        TextView tvDetails = mView.findViewById(R.id.tvDetails);
-        TextView tvPrice = mView.findViewById(R.id.tvPrice);
-        ImageView ivYes = mView.findViewById(R.id.ivYes);
-        ImageView ivNo = mView.findViewById(R.id.ivNo);
+        TextView tvTitle = view.findViewById(R.id.tvTitle);
+        TextView tvDetails = view.findViewById(R.id.tvDetails);
+        TextView tvPrice = view.findViewById(R.id.tvPrice);
+        ImageView ivYes = view.findViewById(R.id.ivYes);
+        ImageView ivNo = view.findViewById(R.id.ivNo);
 
         final PermissionRequestClass request = permissionRequests.get(i);
 
         tvTitle.setText(request.getTitle());
         tvDetails.setText(request.getDetails());
         tvPrice.setText(String.format("%.2f TL", request.getPrice()));
+
+        if(request.isGivenRequest()){
+            if(request.isAllowed()) {
+                ivYes.setBackgroundResource(R.drawable.givenrequest);
+                ivNo.setBackgroundResource(R.drawable.givenrequesttransparent);
+            }
+            else {
+                ivNo.setBackgroundResource(R.drawable.givenrequest);
+                ivYes.setBackgroundResource(R.drawable.givenrequesttransparent);
+            }
+        }
 
         ivYes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,17 +95,21 @@ public class PermissionRequestAdapter extends BaseAdapter {
             public void onClick(View view) {
                 if(onItemClickListener != null && !request.isCheck()) {
                     if(request.isGivenRequest()){
+                        Log.d("PERMISSIONADAPTER", "ivNo click given request");
                         onItemClickListener.onIvNoClick(request, i);
                     }
                     else if(!request.isCheck()) {
+                        Log.d("PERMISSIONADAPTER", "ivNo click request");
                         request.setCheck(true);
                         onItemClickListener.onIvNoClick(request, i);
                     }
                 }
+                else
+                    Log.d("PERMISSIONADAPTER", "onItemClickListener Null");
             }
         });
 
-        return mView;
+        return view;
     }
 
     public void update(ArrayList<PermissionRequestClass> requests){

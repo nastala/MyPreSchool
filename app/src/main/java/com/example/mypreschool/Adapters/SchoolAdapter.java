@@ -52,11 +52,12 @@ public class SchoolAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = mInflater.inflate(R.layout.layout_list_school_adapter, null);
+        if(convertView == null)
+            convertView = mInflater.inflate(R.layout.layout_list_school_adapter, parent, false);
 
-        TextView tvSchoolName = view.findViewById(R.id.tvSchoolName);
-        ImageView ivSchoolDelete = view.findViewById(R.id.ivSchoolDelete);
-        ImageView ivSchoolEdit = view.findViewById(R.id.ivSchoolEdit);
+        TextView tvSchoolName = convertView.findViewById(R.id.tvSchoolName);
+        ImageView ivSchoolDelete = convertView.findViewById(R.id.ivSchoolDelete);
+        ImageView ivSchoolEdit = convertView.findViewById(R.id.ivSchoolEdit);
 
         final School school = schools.get(position);
 
@@ -79,6 +80,6 @@ public class SchoolAdapter extends BaseAdapter {
             }
         });
 
-        return view;
+        return convertView;
     }
 }

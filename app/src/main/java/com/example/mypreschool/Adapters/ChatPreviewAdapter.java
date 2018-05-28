@@ -42,11 +42,13 @@ public class ChatPreviewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        View mView = layoutInflater.inflate(R.layout.adapter_chat_preview, null);
+        if(view == null){
+            view = layoutInflater.inflate(R.layout.adapter_chat_preview, viewGroup, false);
+        }
 
-        TextView tvTitle = mView.findViewById(R.id.tvTitle);
-        TextView tvMessage = mView.findViewById(R.id.tvMessage);
-        TextView tvDate = mView.findViewById(R.id.tvDate);
+        TextView tvTitle = view.findViewById(R.id.tvTitle);
+        TextView tvMessage = view.findViewById(R.id.tvMessage);
+        TextView tvDate = view.findViewById(R.id.tvDate);
 
         Chats chat = chats.get(i).getChats();
 
@@ -54,7 +56,7 @@ public class ChatPreviewAdapter extends BaseAdapter {
         tvMessage.setText(chat.getLastMessage());
         tvDate.setText(chat.getZamanfarki());
 
-        return mView;
+        return view;
     }
 
     public void update(ArrayList<ChatPreview> chats){
